@@ -30,12 +30,8 @@ export default function Footer() {
 
           {/* Logo */}
           <div className="flex justify-end">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <rect x="3" y="3" width="6" height="6" rx="1" fill="white" opacity="0.9"/>
-                <rect x="11" y="3" width="6" height="6" rx="1" fill="white" opacity="0.9"/>
-                <rect x="3" y="11" width="6" height="6" rx="1" fill="white" opacity="0.9"/>
-              </svg>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+              <img src="./Plogo.png" alt="logo" />
             </div>
           </div>
         </div>

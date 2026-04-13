@@ -1,0 +1,309 @@
+'use client'
+import { useState } from 'react'
+import { X, Check } from 'lucide-react'
+import Link from 'next/link'
+
+/* ── Brand logo ─────────────────────────────────────────────────────────── */
+function Logo() {
+    return (
+        <div className="absolute top-[140px] ml-[-48px]">
+           <img src="./logo.png" className='w-56' alt="logo" />
+        </div>
+    )
+}
+
+/* ── Integration icons row ──────────────────────────────────────────────── */
+function IntegrationIcons() {
+    // Coloured icon placeholders matching the screenshot: HubSpot, Paystack, Slack, Stripe, WhatsApp, Salesforce
+    const icons = [
+        { label: 'HubSpot', bg: '#FF7A59', letter: 'H' },
+        { label: 'Paystack', bg: '#00C3F7', letter: 'P' },
+        { label: 'Slack', bg: '#4A154B', letter: 'S' },
+        { label: 'Stripe', bg: '#635BFF', text: 'stripe', textColor: '#635BFF' },
+        { label: 'WhatsApp', bg: '#25D366', letter: 'W' },
+        { label: 'Salesforce', bg: '#00A1E0', letter: 'SF' },
+    ]
+    return (
+        <div className="flex items-center justify-center gap-3 flex-wrap">
+            {icons.map(ic => (
+                ic.text
+                    ? <span key={ic.label} className="text-sm font-bold" style={{ color: ic.textColor }}>{ic.text}</span>
+                    : (
+                        <div key={ic.label}
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0"
+                            style={{ background: ic.bg }}>
+                            {ic.letter}
+                        </div>
+                    )
+            ))}
+        </div>
+    )
+}
+
+/* ── Apply Modal ────────────────────────────────────────────────────────── */
+function ApplyModal({ onClose }: { onClose: () => void }) {
+    const [form, setForm] = useState({
+        company: '', industry: '', channel: '', volume: '', challenge: '',
+    })
+    const [submitted, setSubmitted] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState('')
+
+    const set = (k: keyof typeof form) => (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) => setForm(f => ({ ...f, [k]: e.target.value }))
+
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault()
+        if (!form.company.trim()) return
+        
+        setIsLoading(true)
+        setError('')
+
+        try {
+            const response = await fetch('/api/applications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(form),
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.error || 'Failed to submit application')
+            }
+
+            setSubmitted(true)
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An error occurred')
+            console.error('Form submission error:', err)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const selectCls = "w-full bg-[#1a1a2a] border border-[#2a2a3a] rounded-xl px-4 py-3 text-sm text-white outline-none appearance-none cursor-pointer focus:border-[#2DD4BF] transition-colors"
+    const inputCls = "w-full bg-[#1a1a2a] border border-[#2a2a3a] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#2DD4BF] transition-colors"
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={onClose} />
+            <div className="relative bg-[#111118] border border-[#2a2a3a] rounded-2xl w-full max-w-[520px] shadow-2xl overflow-hidden">
+
+                {submitted ? (
+                    /* ── Success state ── */
+                    <div className="p-10 text-center">
+                        <div className="w-16 h-16 rounded-full border-2 border-[#2DD4BF] flex items-center justify-center mx-auto mb-5">
+                            <Check size={30} className="text-[#2DD4BF]" strokeWidth={2.5} />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">Application Received!</h3>
+                        <p className="text-sm text-gray-400 leading-relaxed mb-7">
+                            Thank you for applying to the Providius Founding Companies Program.
+                            We'll be in touch within 48 hours.
+                        </p>
+                        <Link href="/">
+                        <button
+                            className="w-full py-3.5 bg-[#2DD4BF] hover:bg-[#26b8a6] text-black font-bold rounded-xl text-sm transition-colors">
+                            Go Back to Homepage
+                        </button>
+                        </Link>
+                    </div>
+                ) : (
+                    /* ── Form ── */
+                    <>
+                        <div>
+                            <div className="flex items-center justify-between px-7 pt-7 pb-5">
+                            <h3 className="text-2xl text-white">Apply for early access</h3>
+                            <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+                                <X size={18} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="px-7 pb-7 space-y-4">
+                            {error && (
+                                <div className="bg-red-500/10 border border-red-500/50 rounded-xl px-4 py-3 text-sm text-red-400">
+                                    {error}
+                                </div>
+                            )}
+                            
+                            {/* Company name */}
+                            <div>
+                                <label className="block text-xs font-medium text-gray-400 mb-2">
+                                    Company Name <span className="text-[#2DD4BF]">(required)</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    value={form.company}
+                                    onChange={set('company')}
+                                    required
+                                    disabled={isLoading}
+                                    className={inputCls}
+                                />
+                            </div>
+
+                            {/* Industry */}
+                            <div>
+                                <label className="block text-xs font-medium text-gray-400 mb-2">Industries</label>
+                                <div className="relative">
+                                    <select value={form.industry} onChange={set('industry')} disabled={isLoading} className={selectCls}>
+                                        <option value="" disabled hidden>Select Industry</option>
+                                        <option value="finance">Finance</option>
+                                        <option value="healthcare">Healthcare</option>
+                                        <option value="retail">Retail / E-commerce</option>
+                                        <option value="logistics">Logistics</option>
+                                        <option value="tech">Technology</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <svg className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Channel */}
+                            <div>
+                                <label className="block text-xs font-medium text-gray-400 mb-2">Channel</label>
+                                <div className="relative">
+                                    <select value={form.channel} onChange={set('channel')} disabled={isLoading} className={selectCls}>
+                                        <option value="" disabled hidden>Select Channel</option>
+                                        <option value="whatsapp">WhatsApp</option>
+                                        <option value="email">Email</option>
+                                        <option value="webchat">Website Chat</option>
+                                        <option value="instagram">Instagram</option>
+                                        <option value="linkedin">LinkedIn</option>
+                                    </select>
+                                    <svg className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Volume */}
+                            <div>
+                                <label className="block text-xs font-medium text-gray-400 mb-2">Monthly customer conversation</label>
+                                <div className="relative">
+                                    <select value={form.volume} onChange={set('volume')} disabled={isLoading} className={selectCls}>
+                                        <option value="" disabled hidden>Select Channel</option>
+                                        <option value="under100">Under 100</option>
+                                        <option value="100-500">100 – 500</option>
+                                        <option value="500-2k">500 – 2,000</option>
+                                        <option value="2k-10k">2,000 – 10,000</option>
+                                        <option value="10k+">10,000+</option>
+                                    </select>
+                                    <svg className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Challenge */}
+                            <div>
+                                <label className="block text-xs font-medium text-gray-400 mb-2">Biggest customer support challenge</label>
+                                <textarea
+                                    value={form.challenge}
+                                    onChange={set('challenge')}
+                                    disabled={isLoading}
+                                    placeholder="Briefly describe your biggest customer care pain point..."
+                                    rows={4}
+                                    className={`${inputCls} resize-none`}
+                                />
+                            </div>
+
+                            <div className='flex justify-center'>
+                                <button type="submit"
+                                disabled={isLoading}
+                                className="w-full lg:w-40 py-3.5 bg-[#14B8A6] hover:bg-[#26b8a6] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl text-sm transition-all active:scale-[0.98] mt-2">
+                                {isLoading ? 'Submitting...' : 'Submit'}
+                            </button>
+                            </div>
+                        </form>
+                        </div>
+                    </>
+                )}
+            </div>
+        </div>
+    )
+}
+
+/* ── Main page ──────────────────────────────────────────────────────────── */
+export default function FoundingProgramPage() {
+    const [showModal, setShowModal] = useState(false)
+
+    const benefits = [
+        'Exclusive early access to our AI Customer Care Platform',
+        'Dedicated onboarding and priority support',
+        'Get a custom setup tailored to your customer support workflows',
+    ]
+
+    return (
+        <>
+            {/* Full-screen dark background */}
+            <div className="min-h-screen bg-[#0a0a14] flex items-center justify-center p-4 sm:p-8">
+                <div className="w-full max-w-[540px] lg:max-w-[940px] lg:p-20">
+
+                    {/* Card */}
+                    <div className="bg-[#111118] border border-[#1e1e2e] rounded-2xl px-10 sm:px-10 py-10 sm:py-12 shadow-2xl">
+
+                        {/* Logo */}
+                        <div className="mb-8 ml-0">
+                            <Logo />
+                        </div>
+
+                        <div className='mt-20'>
+                            {/* Headline */}
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-5 leading-tight tracking-tight">
+                            Providius Founding Companies Program
+                        </h1>
+
+                        {/* Description */}
+                        <p className="text-sm text-white leading-relaxed mb-2">
+                            Apply to become part of our founding companies pilot program and get early access to our AI customer care platform.
+                        </p>
+                        <p className="text-sm text-white leading-relaxed mb-7">
+                            Help shape the future of customer service automation.
+                        </p>
+
+                        {/* Divider */}
+                        <div className="h-px bg-[#1e1e2e] mb-7" />
+
+                        {/* Benefits */}
+                        <ul className="space-y-4 mb-9">
+                            {benefits.map((b, i) => (
+                                <li key={i} className="flex items-start gap-3">
+                                    <div className="w-6 h-6 rounded-full bg-[#2DD4BF]/15 border border-[#2DD4BF]/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <Check size={12} className="text-[#2DD4BF]" strokeWidth={3} />
+                                    </div>
+                                    <span className="text-sm text-gray-300 leading-relaxed">{b}</span>
+                                </li>
+                            ))}
+                        </ul>
+
+                        {/* Integrations */}
+                        <div className="mb-9">
+                            <p className="text-xs text-gray-500 text-center mb-4">Seamlessly integrates with your existing tools</p>
+                            <IntegrationIcons />
+                        </div>
+
+                        {/* CTA */}
+                        <div className="flex justify-center lg:w-full">
+                            <button
+                                onClick={() => setShowModal(true)}
+                                className="w-full lg:w-56 py-4 bg-[#14B8A6] hover:bg-[#26b8a6] text-white font-bold text-base rounded-xl transition-all active:scale-[0.99] shadow-lg shadow-[#2DD4BF]/20"
+                            >
+                                Apply Now
+                            </button>
+                        </div>
+
+                        {/* Fine print */}
+                        <p className="text-xs text-gray-600 text-center mt-4">
+                            Limited spots available for the founding program.
+                        </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Modal */}
+            {showModal && <ApplyModal onClose={() => setShowModal(false)} />}
+        </>
+    )
+}

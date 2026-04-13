@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Hero() {
   return (
     <section className="bg-[#f5f5f7] pt-12 pb-0 px-4 text-center relative overflow-hidden">
@@ -29,9 +31,11 @@ export default function Hero() {
 
       {/* CTAs */}
       <div className="flex flex-col md:flex-row gap-4 justify-center mb-16">
+       <Link href="/founding">
         <button className="bg-gradient-to-r from-blue-500 to-teal-400 text-white px-8 py-4 rounded-2xl text-base font-bold hover:opacity-90 transition-opacity">
-          Get Started
+          Join the waitlist
         </button>
+        </Link>
         <button className="bg-teal-500 text-white px-8 py-4 rounded-2xl text-base font-bold hover:bg-teal-600 transition-colors">
           See Demo
         </button>
