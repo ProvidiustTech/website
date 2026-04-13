@@ -68,7 +68,7 @@ export async function POST(request: Request) {
       try {
         const emailResult = await resend.emails.send({
           from: 'Providius <onboarding@resend.dev>',
-          to: 'nkememmanuel5505@gmail.com',
+          to: 'support@providiustech.com',
           subject: `New Application: ${company}`,
           html: `
             <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
@@ -87,7 +87,6 @@ export async function POST(request: Request) {
             </div>
           `,
         });
-        console.log('✅ Email sent successfully:', emailResult);
       } catch (emailError) {
         console.error('❌ Email sending failed:', emailError);
         // Don't fail the request if email fails, just log it
