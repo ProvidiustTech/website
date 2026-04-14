@@ -1,11 +1,21 @@
 datasource db {
   provider = "mysql"
-  // url = env("DATABASE_URL")   ← DELETE THIS LINE
 }
 
 generator client {
   provider = "prisma-client-js"
-  binaryTargets   = ["native", "linux-musl"]  
-
-
+  binaryTargets   = ["native", "linux-musl"]
 }
+
+model Application {
+  id        String   @id @default(cuid())
+  company   String   @db.VarChar(255)
+  industry  String?  @db.VarChar(100)
+  channel   String?  @db.VarChar(100)
+  volume    String?  @db.VarChar(100)
+  challenge String?  @db.Text
+  createdAt DateTime @default(now())
+  
+  @@index([createdAt])
+}
+
