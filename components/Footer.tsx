@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-[#111827] px-6 py-12 border-t border-[#1f2937]">
+    <footer className="bg-[#22242A] px-4 md:px-8 py-12 border-t border-[#1f2937] w-full overflow-hidden">
       <div className="max-w-4xl mx-auto">
         {/* Links grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-10">

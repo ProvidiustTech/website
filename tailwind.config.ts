@@ -6,7 +6,11 @@ const config: Config = {
     "./components/**/*.{ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        degular: ['Degular', 'system-ui', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };

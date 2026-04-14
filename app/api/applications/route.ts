@@ -3,19 +3,14 @@ import { PrismaClient } from '@prisma/client';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Singleton pattern for Prisma Client (prevents connection pool exhaustion)
-let prisma: PrismaClient;
+// Lazy-initialized Prisma Client singleton
+let prisma: PrismaClient | null = null;
 
-if (process.env.NODE_ENV === 'production') {
-  prisma = new PrismaClient();
-} else {
-  const globalWithPrisma = global as typeof globalThis & {
-    prisma: PrismaClient;
-  };
-  if (!globalWithPrisma.prisma) {
-    globalWithPrisma.prisma = new PrismaClient();
+function getPrisma(): PrismaClient {
+  if (!prisma) {
+    prisma = new PrismaClient();
   }
-  prisma = globalWithPrisma.prisma;
+  return prisma;
 }
 
 
@@ -35,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     // Save to database
-    const submission = await prisma.application.create({
+    const submission = await getPrisma().application.create({
       data: {
         company,
         industry: industry || null,
@@ -92,7 +87,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const submissions = await prisma.application.findMany({
+    const submissions = await getPrisma().application.findMany({
       orderBy: { createdAt: 'desc' },
     });
     return Response.json({ submissions });

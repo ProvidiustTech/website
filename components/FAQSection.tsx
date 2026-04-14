@@ -22,7 +22,7 @@ export default function FAQSection() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <section className="bg-[#111827] py-16 px-4">
+    <section className="bg-[#000000] py-16 px-4 md:px-8 w-full overflow-hidden">
       {/* Badge */}
       <div className="flex justify-center mb-8">
         <div className="inline-flex items-center gap-2 bg-[#1f2937] border border-[#374151] rounded-full px-4 py-2">
@@ -85,9 +85,7 @@ export default function FAQSection() {
             <div className="p-5">
               {/* Avatar + name */}
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                  F
-                </div>
+                <img src="./federico.png" className="w-12" alt="" />
                 <div>
                   <p className="text-white font-semibold text-sm">Federico</p>
                   <p className="text-gray-400 text-xs">Reply-To</p>

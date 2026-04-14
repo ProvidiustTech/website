@@ -24,8 +24,14 @@ function IntegrationIcons() {
         { label: 'Salesforce', bg: '#00A1E0', letter: 'SF' },
     ]
     return (
-        <div className="flex items-center justify-center gap-3 flex-wrap">
-            {icons.map(ic => (
+        <div className="flex items-center justify-center gap-7 flex-wrap">
+            <img src="./shopifyicon.png" className='w-8' alt="" />
+            <img src="./paypal.png" className='w-7' alt="" />
+            <img src="./slack.png" className='w-8' alt="" />
+            <img src="./stripe.png" className='w-14' alt="" />
+            <img src="./whatsappicon.png" className='w-7' alt="" />
+            <img src="./zendesk.png" className='w-40' alt="" />
+            {/* {icons.map(ic => (
                 ic.text
                     ? <span key={ic.label} className="text-sm font-bold" style={{ color: ic.textColor }}>{ic.text}</span>
                     : (
@@ -35,7 +41,7 @@ function IntegrationIcons() {
                             {ic.letter}
                         </div>
                     )
-            ))}
+            ))} */}
         </div>
     )
 }
@@ -269,17 +275,18 @@ export default function FoundingProgramPage() {
                         <ul className="space-y-4 mb-9">
                             {benefits.map((b, i) => (
                                 <li key={i} className="flex items-start gap-3">
-                                    <div className="w-6 h-6 rounded-full bg-[#2DD4BF]/15 border border-[#2DD4BF]/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                        <Check size={12} className="text-[#2DD4BF]" strokeWidth={3} />
+                                    <div className="w-6 h-6 rounded-full border border-[#2DD4BF]/30 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                                   <img src="./check2.png" alt="" />
+
                                     </div>
-                                    <span className="text-sm text-gray-300 leading-relaxed">{b}</span>
+                                    <span className="text-sm font-semibold text-gray-300 leading-relaxed">{b}</span>
                                 </li>
                             ))}
                         </ul>
 
                         {/* Integrations */}
                         <div className="mb-9">
-                            <p className="text-xs text-gray-500 text-center mb-4">Seamlessly integrates with your existing tools</p>
+                            <p className="text-xs text-white font-normal text-center mb-4">Seamlessly integrates with your existing tools</p>
                             <IntegrationIcons />
                         </div>
 
