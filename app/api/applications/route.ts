@@ -1,38 +1,25 @@
 import { Resend } from 'resend';
-import fs from 'fs';
-import path from 'path';
+import { PrismaClient } from '@prisma/client';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const SUBMISSIONS_FILE = path.join(process.cwd(), 'data', 'submissions.json');
+// Singleton pattern for Prisma Client (prevents connection pool exhaustion)
+let prisma: PrismaClient;
 
-// Ensure data directory exists
-function ensureDataDir() {
-  const dataDir = path.join(process.cwd(), 'data');
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient();
+} else {
+  const globalWithPrisma = global as typeof globalThis & {
+    prisma: PrismaClient;
+  };
+  if (!globalWithPrisma.prisma) {
+    globalWithPrisma.prisma = new PrismaClient();
   }
+  prisma = globalWithPrisma.prisma;
 }
 
-// Get all submissions
-function getSubmissions() {
-  ensureDataDir();
-  if (!fs.existsSync(SUBMISSIONS_FILE)) {
-    return [];
-  }
-  try {
-    const data = fs.readFileSync(SUBMISSIONS_FILE, 'utf-8');
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
-}
 
-// Save submissions
-function saveSubmissions(submissions: any[]) {
-  ensureDataDir();
-  fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(submissions, null, 2));
-}
+
 
 export async function POST(request: Request) {
   try {
@@ -47,21 +34,16 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create submission object
-    const submission = {
-      id: Date.now().toString(),
-      company,
-      industry,
-      channel,
-      volume,
-      challenge,
-      submittedAt: new Date().toISOString(),
-    };
-
-    // Save to file
-    const submissions = getSubmissions();
-    submissions.push(submission);
-    saveSubmissions(submissions);
+    // Save to database
+    const submission = await prisma.application.create({
+      data: {
+        company,
+        industry: industry || null,
+        channel: channel || null,
+        volume: volume || null,
+        challenge: challenge || null,
+      },
+    });
 
     // Send email notification
     if (process.env.RESEND_API_KEY) {
@@ -80,7 +62,7 @@ export async function POST(request: Request) {
                 <p><strong>Monthly Volume:</strong> ${volume || 'Not specified'}</p>
                 <p><strong>Challenge:</strong></p>
                 <p style="background-color: #f9f9f9; padding: 10px; border-left: 4px solid #14B8A6; border-radius: 4px;">${challenge || 'Not specified'}</p>
-                <p><strong>Submitted:</strong> ${new Date(submission.submittedAt).toLocaleString()}</p>
+                <p><strong>Submitted:</strong> ${new Date(submission.createdAt).toLocaleString()}</p>
                 <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
                 <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/applications" style="background-color: #14B8A6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">View in Admin Dashboard</a></p>
               </div>
@@ -110,7 +92,9 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const submissions = getSubmissions();
+    const submissions = await prisma.application.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
     return Response.json({ submissions });
   } catch (error) {
     console.error('Error fetching submissions:', error);
