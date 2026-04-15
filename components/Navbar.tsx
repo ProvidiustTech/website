@@ -13,13 +13,14 @@ export default function Navbar() {
   
       <Link href="/">
       <div className="flex items-center gap-2">
-        <img src="./logo.png" className="w-56 absolute mt-4" alt="" />
+        <img src="/logo.png" className="w-56 absolute mt-4" alt="" />
       </div>
       </Link>
 
 
       {/* Desktop Nav */}
       <div className="hidden ml-40 md:flex items-center gap-8">
+        <a href="/" className="text-gray-600 hover:text-gray-900 text-lg ">Home</a>
         <a href="/product" className="text-gray-600 hover:text-gray-900 text-lg ">Product</a>
         <a href="/pricing" className="text-gray-600 hover:text-gray-900 text-lg ">Pricing</a>
         <a href="/pilot-program" className="text-gray-600 hover:text-gray-900 text-lg ">Pilot program</a>
@@ -48,6 +49,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="absolute left-4 right-4 mt-80 bg-white rounded-2xl shadow-lg p-6 z-50 flex flex-col gap-4">
+          <a href="/" className="text-gray-700 ">Home</a>
           <a href="/product" className="text-gray-700 ">Product</a>
           <a href="/pricing" className="text-gray-700 ">Pricing</a>
           <a href="/pilot-program" className="text-gray-700 ">Pilot program</a>

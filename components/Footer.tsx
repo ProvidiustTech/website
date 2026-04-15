@@ -31,7 +31,7 @@ export default function Footer() {
           {/* Logo */}
           <div className="flex justify-end">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center">
-              <img src="./Plogo.png" alt="logo" />
+              <img src="/Plogo.png" alt="logo" />
             </div>
           </div>
         </div>

@@ -8,7 +8,7 @@ export default function AutomateSection() {
             Automate customer Care without losing quality
           </h2>
           <div className="flex items-center gap-2 bg-white rounded-full w-96 px-7 py-3 shadow-sm self-start md:self-auto">
-              <img src="./thunderbolt.png" className="w-8" alt="" />
+              <img src="/thunderbolt.png" className="w-8" alt="" />
             
             <span className="text-gray-600 text-sm font-medium">Smarter support, without the overhead.</span>
           </div>
@@ -58,7 +58,7 @@ export default function AutomateSection() {
               </div>
 
               {/* Chat body */}
-              <img src="./conversationcard.png" className="w-full" alt="" />
+              <img src="/conversationcard.png" className="w-full" alt="" />
               
 
               {/* Input */}

@@ -85,7 +85,7 @@ export default function FAQSection() {
             <div className="p-5">
               {/* Avatar + name */}
               <div className="flex items-center gap-3 mb-4">
-                <img src="./federico.png" className="w-12" alt="" />
+                <img src="/federico.png" className="w-12" alt="" />
                 <div>
                   <p className="text-white font-semibold text-sm">Federico</p>
                   <p className="text-gray-400 text-xs">Reply-To</p>

@@ -13,13 +13,14 @@ export function middleware(request: NextRequest) {
     '/admin/applications',    // admin applications section
   ];
 
-  // Protect API routes, static files, etc. - let them through without modification
+  // CRITICAL: Protect API routes, static files, etc. - let them through without modification
   if (
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/public') ||
-    pathname.startsWith('/favicon') ||
-    pathname.includes('.')
+    pathname.startsWith('/api/') ||
+    pathname.startsWith('/_next/') ||
+    pathname.startsWith('/static/') ||
+    pathname === '/favicon.ico' ||
+    // Allow all files in public directory (images, fonts, etc.)
+    /\.(png|svg|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|eot)$/i.test(pathname)
   ) {
     return NextResponse.next();
   }
@@ -45,10 +46,10 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Run middleware on all routes except static assets
+// Run middleware on all routes EXCEPT these patterns
 export const config = {
   matcher: [
-    // Run on all routes except:
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.png|.*\\.svg|.*\\.jpg|.*\\.jpeg|.*\\.webp).*)',
+    // Exclude API routes, static files, and common assets
+    '/((?!api|_next|static|favicon\\.ico|.*\\.(?:png|svg|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|eot)).*)',
   ],
 };

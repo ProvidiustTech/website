@@ -5,7 +5,7 @@ export default function Hero() {
     <section className="bg-[#f5f5f7] pt-12 pb-0 px-4 text-center relative overflow-hidden">
       {/* Badge */}
       <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm mb-8">
-          <img src="buildicon.svg" alt="" />
+          <img src="/buildicon.svg" alt="" />
         {/* <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center">
         </div> */}
         <span className="text-gray-700 text-sm">Built for modern customer support</span>
@@ -41,7 +41,7 @@ export default function Hero() {
       </div>
 
       {/* Floating status pills - desktop only */}
-      <img src="./chat.png" className="h-full w-[90%] ml-3 lg:ml-20" alt="" />
+      <img src="/chat.png" className="h-full w-[90%] ml-3 lg:ml-20" alt="" />
       
     </section>
   );

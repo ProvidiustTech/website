@@ -8,7 +8,7 @@ export default function CTASection() {
       {/* Glowing logo */}
       <div className="relative inline-block mb-[-50px]">
         <div className="">
-            <img src="./footer.png" alt="logo" />
+            <img src="/footer.png" alt="logo" />
         </div>
         
       </div>
