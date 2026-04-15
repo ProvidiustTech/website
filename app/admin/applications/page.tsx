@@ -5,12 +5,15 @@ import Link from 'next/link'
 
 interface Application {
   id: string
-  company: string
-  industry: string
-  channel: string
-  volume: string
-  challenge: string
-  submittedAt: string
+  company: string | null
+  companyEmail: string | null
+  industry: string | null
+  channel: string | null
+  volume: string | null
+  challenge: string | null
+  email: string | null
+  source: string
+  createdAt: string
 }
 
 const AUTO_LOGOUT_MINUTES = 30; // Auto logout after 30 minutes of inactivity
@@ -22,6 +25,7 @@ export default function ApplicationsPage() {
   const [passwordInput, setPasswordInput] = useState('')
   const [inactivityTimer, setInactivityTimer] = useState<NodeJS.Timeout | null>(null)
   const [lastActivityTime, setLastActivityTime] = useState<number>(Date.now())
+  const [filterSource, setFilterSource] = useState<'all' | 'founding' | 'coming-soon'>('all')
 
   useEffect(() => {
     const authStatus = sessionStorage.getItem('admin-authenticated');
@@ -76,9 +80,9 @@ export default function ApplicationsPage() {
     setIsAuthenticated(false);
     setPasswordInput('');
     setApplications([]);
-    
+
     if (inactivityTimer) clearTimeout(inactivityTimer);
-    
+
     if (isAutoLogout) {
       alert(`Session expired due to inactivity. Please log in again.`);
     }
@@ -111,9 +115,25 @@ export default function ApplicationsPage() {
   }
 
   async function deleteApplication(id: string) {
-    if (!confirm('Are you sure you want to delete this application?')) return;
-    // You'll need to add a DELETE method to the API
-    alert('Delete functionality coming soon');
+    if (!confirm('Are you sure you want to delete this application? This action cannot be undone.')) return;
+    
+    try {
+      const response = await fetch(`/api/applications?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete');
+      }
+
+      // Remove from state immediately
+      setApplications(prev => prev.filter(app => app.id.toString() !== id.toString()));
+      alert('Application deleted successfully');
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Failed to delete application: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    }
   }
 
   function exportAsCSV() {
@@ -122,14 +142,15 @@ export default function ApplicationsPage() {
       return;
     }
 
-    const headers = ['Company', 'Industry', 'Channel', 'Volume', 'Challenge', 'Submitted'];
-    const rows = applications.map(app => [
-      app.company,
-      app.industry,
-      app.channel,
-      app.volume,
-      app.challenge.replace(/"/g, '""'),
-      new Date(app.submittedAt).toLocaleString(),
+    const headers = ['Type', 'Company/Email', 'Company Name', 'Channel', 'Volume', 'Challenge', 'Submitted'];
+    const rows = filteredApps.map(app => [
+      app.source === 'founding' ? 'Founding' : 'Coming Soon',
+      app.source === 'founding' ? app.company : app.email,
+      app.industry || '',
+      app.channel || '',
+      app.volume || '',
+      app.challenge?.replace(/"/g, '""') || '',
+      new Date(app.createdAt).toLocaleString(),
     ]);
 
     const csv = [
@@ -181,13 +202,15 @@ export default function ApplicationsPage() {
               Login
             </button>
           </form>
-          <p className="text-xs text-gray-500 text-center mt-4">
-            Default password: admin123
-          </p>
         </div>
       </div>
     );
   }
+
+  // Filter the applications based on selected source
+  const filteredApps = filterSource === 'all' 
+    ? applications 
+    : applications.filter(a => a.source === filterSource);
 
   return (
     <div className="min-h-screen bg-[#0a0a14] p-4 sm:p-8">
@@ -227,7 +250,51 @@ export default function ApplicationsPage() {
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Filter Section */}
+        <div className="mb-6 flex gap-3">
+          <button
+            onClick={() => setFilterSource('all')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              filterSource === 'all'
+                ? 'bg-[#14B8A6] text-white'
+                : 'bg-[#1a1a2a] text-gray-400 hover:bg-[#2a2a3a]'
+            }`}
+          >
+            All Submissions ({applications.length})
+          </button>
+          <button
+            onClick={() => setFilterSource('founding')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              filterSource === 'founding'
+                ? 'bg-blue-500 text-white'
+                : 'bg-[#1a1a2a] text-gray-400 hover:bg-[#2a2a3a]'
+            }`}
+          >
+            Founding ({applications.filter(a => a.source === 'founding').length})
+          </button>
+          <button
+            onClick={() => setFilterSource('coming-soon')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              filterSource === 'coming-soon'
+                ? 'bg-purple-500 text-white'
+                : 'bg-[#1a1a2a] text-gray-400 hover:bg-[#2a2a3a]'
+            }`}
+          >
+           Coming Soon ({applications.filter(a => a.source === 'coming-soon').length})
+          </button>
+        </div>
+
+        {/* Filter results */}
+        <div className="mb-6">
+          <p className="text-sm text-gray-400">
+            {(() => {
+              const filtered = filterSource === 'all' 
+                ? applications 
+                : applications.filter(a => a.source === filterSource);
+              return `Showing ${filtered.length} submission${filtered.length !== 1 ? 's' : ''}`;
+            })()}
+          </p>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-[#111118] border border-[#2a2a3a] rounded-xl p-4">
             <p className="text-gray-400 text-sm mb-1">Total Applications</p>
@@ -237,7 +304,7 @@ export default function ApplicationsPage() {
             <p className="text-gray-400 text-sm mb-1">This Week</p>
             <p className="text-2xl font-bold text-white">
               {applications.filter(a => {
-                const submittedDate = new Date(a.submittedAt);
+                const submittedDate = new Date(a.createdAt);
                 const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
                 return submittedDate > weekAgo;
               }).length}
@@ -248,11 +315,11 @@ export default function ApplicationsPage() {
             <p className="text-2xl font-bold text-white">
               {applications.length > 0
                 ? Object.entries(
-                    applications.reduce((acc: Record<string, number>, app) => {
-                      acc[app.industry] = (acc[app.industry] || 0) + 1;
-                      return acc;
-                    }, {})
-                  ).sort((a, b) => b[1] - a[1])[0]?.[0] || '-'
+                  applications.reduce((acc: Record<string, number>, app) => {
+                    acc[app.industry] = (acc[app.industry] || 0) + 1;
+                    return acc;
+                  }, {})
+                ).sort((a, b) => b[1] - a[1])[0]?.[0] || '-'
                 : '-'}
             </p>
           </div>
@@ -260,7 +327,14 @@ export default function ApplicationsPage() {
             <p className="text-gray-400 text-sm mb-1">Last Submission</p>
             <p className="text-sm font-bold text-white">
               {applications.length > 0
-                ? new Date(applications[applications.length - 1].submittedAt).toLocaleDateString()
+                ? new Date(applications[0].createdAt).toLocaleString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: '2-digit',
+                  hour12: true,
+                })
                 : '-'}
             </p>
           </div>
@@ -277,8 +351,9 @@ export default function ApplicationsPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-[#2a2a3a]">
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300">Company</th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300">Industry</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300">Type</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300">Company/Email</th>
+                    <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300">Company name</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300">Channel</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300">Volume</th>
                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-300">Challenge</th>
@@ -287,20 +362,34 @@ export default function ApplicationsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {applications.map((app, idx) => (
+                  {filteredApps.map((app, idx) => (
                     <tr
                       key={app.id}
-                      className={`border-b border-[#2a2a3a] hover:bg-[#1a1a2a] transition-colors ${
-                        idx === applications.length - 1 ? 'border-b-0' : ''
-                      }`}
+                      className={`border-b border-[#2a2a3a] hover:bg-[#1a1a2a] transition-colors`}
                     >
-                      <td className="px-6 py-4 text-sm text-white font-medium">{app.company}</td>
-                      <td className="px-6 py-4 text-sm text-gray-400">{app.industry || '-'}</td>
+                      <td className="px-6 py-4 text-sm font-medium">
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          app.source === 'founding'
+                            ? 'bg-blue-500/20 text-blue-400'
+                            : 'bg-purple-500/20 text-purple-400'
+                        }`}>
+                          {app.source === 'founding' ? 'Founding' : 'Coming Soon'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-white font-medium">{app.source === 'founding' ? app.company : app.email}</td>
+                      <td className="px-6 py-4 text-sm text-gray-400">{app.company || '-'}</td>
                       <td className="px-6 py-4 text-sm text-gray-400">{app.channel || '-'}</td>
                       <td className="px-6 py-4 text-sm text-gray-400">{app.volume || '-'}</td>
                       <td className="px-6 py-4 text-sm text-gray-400 max-w-xs truncate">{app.challenge || '-'}</td>
                       <td className="px-6 py-4 text-sm text-gray-400">
-                        {new Date(app.submittedAt).toLocaleDateString()}
+                        {new Date(app.createdAt).toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: 'numeric',
+                          minute: '2-digit',
+                          hour12: true,
+                        })}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button

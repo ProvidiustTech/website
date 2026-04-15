@@ -12,7 +12,7 @@ export default function Integrations() {
 
         {/* Slack */}
         <div className="flex items-center justify-center">
-          <img src="./hubspot.png" className="w-20 lg:w-36" alt="" />
+          <img src="./hubspot.png" className="w-28 lg:mt-2 ml-[-16px] lg:ml-o lg:w-36" alt="" />
         </div>
 
         {/* WhatsApp */}

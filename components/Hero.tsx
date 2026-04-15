@@ -33,7 +33,7 @@ export default function Hero() {
           Join the waitlist
         </button>
         </Link>
-        <Link href='/'>
+        <Link href='/founding/seedemo'>
         <button className="bg-teal-500 px-[32%] text-white lg:px-8 py-4 rounded-2xl text-lg font-medium hover:bg-teal-600 transition-colors">
           See Demo
         </button>

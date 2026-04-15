@@ -143,7 +143,7 @@ Who: Developers / other apps
 
 ---
 
-## 📧 Email Configuration
+##  Email Configuration
 
 ### Once You Add Your Resend API Key:
 1. Form receives submission
