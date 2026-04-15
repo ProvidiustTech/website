@@ -88,7 +88,7 @@ function ApplyModal({ onClose }: { onClose: () => void }) {
     }
 
     const selectCls = "w-full bg-[#1a1a2a] border border-[#2a2a3a] rounded-xl px-4 py-3 text-sm text-white outline-none appearance-none cursor-pointer focus:border-[#2DD4BF] transition-colors"
-    const inputCls = "w-full bg-[#1a1a2a] border border-[#2a2a3a] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 outline-none focus:border-[#2DD4BF] transition-colors"
+    const inputCls = "w-full bg-[#1a1a2a] border border-[#2a2a3a] rounded-xl px-4 py-3 text-sm lg:text-base text-white placeholder-gray-600 outline-none focus:border-[#2DD4BF] transition-colors"
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -116,7 +116,8 @@ function ApplyModal({ onClose }: { onClose: () => void }) {
                 ) : (
                     /* ── Form ── */
                     <>
-                        <div>
+                        <div className='mt-0'>
+                            <div>
                             <div className="flex items-center justify-between px-7 pt-7 pb-5">
                             <h3 className="text-2xl text-white">Apply for early access</h3>
                             <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
@@ -223,6 +224,7 @@ function ApplyModal({ onClose }: { onClose: () => void }) {
                             </div>
                         </form>
                         </div>
+                        </div>
                     </>
                 )}
             </div>
@@ -250,7 +252,7 @@ export default function FoundingProgramPage() {
                     <div className="bg-[#111118] border border-[#1e1e2e] rounded-2xl px-10 sm:px-10 py-10 sm:py-12 shadow-2xl">
 
                         {/* Logo */}
-                        <div className="mb-8 ml-0">
+                        <div className="lg:mb-8 top-[-190px] relative ml-0">
                             <Logo />
                         </div>
 

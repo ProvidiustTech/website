@@ -1,19 +1,7 @@
 import { Resend } from 'resend';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from "@/lib/prisma";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Lazy-initialized Prisma Client singleton
-let prisma: PrismaClient | null = null;
-
-function getPrisma(): PrismaClient {
-  if (!prisma) {
-    prisma = new PrismaClient();
-  }
-  return prisma;
-}
-
-
 
 
 export async function POST(request: Request) {
@@ -30,7 +18,7 @@ export async function POST(request: Request) {
     }
 
     // Save to database
-    const submission = await getPrisma().application.create({
+    const submission = await prisma.application.create({
       data: {
         company,
         industry: industry || null,
@@ -87,7 +75,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const submissions = await getPrisma().application.findMany({
+    const submissions = await prisma.application.findMany({
       orderBy: { createdAt: 'desc' },
     });
     return Response.json({ submissions });
