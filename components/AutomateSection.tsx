@@ -1,13 +1,13 @@
 export default function AutomateSection() {
   return (
-    <section className="bg-[#f5f5f7] py-16 px-4 md:px-8 w-full overflow-hidden">
+    <section className="bg-[#f5f5f7] m-8 py-16 px-4 md:px-8 w-98 xl:w-full overflow-hidden">
       {/* Section header */}
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-12">
           <h2 className="text-3xl md:text-4xl font-semibold text-[#1a1a2e] max-w-2xl leading-tight">
             Automate customer Care without losing quality
           </h2>
-          <div className="flex items-center gap-2 bg-white rounded-full w-96 px-7 py-3 shadow-sm self-start md:self-auto">
+          <div className="flex items-center gap-2 bg-white rounded-full w- xl:w-96 px-7 py-3 shadow-sm self-start md:self-auto">
               <img src="/thunderbolt.png" className="w-8" alt="" />
             
             <span className="text-gray-600 text-sm font-medium">Smarter support, without the overhead.</span>

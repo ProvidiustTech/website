@@ -26,11 +26,8 @@ export default function FAQSection() {
       {/* Badge */}
       <div className="flex justify-center mb-8">
         <div className="inline-flex items-center gap-2 bg-[#1f2937] border border-[#374151] rounded-full px-4 py-2">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-yellow-400 to-teal-400 flex items-center justify-center">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1L7.5 4.5H11L8.5 6.5 9.5 10 6 8 2.5 10 3.5 6.5 1 4.5H4.5L6 1z" fill="white"/>
-            </svg>
-          </div>
+            <img src="./everything.png" className="w-10" alt="" />
+          
           <span className="text-gray-300 text-sm font-medium">Everything you need to know</span>
         </div>
       </div>

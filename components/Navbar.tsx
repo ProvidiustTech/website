@@ -6,7 +6,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-   <div className="sticky top-5 lg:top-5 z-40 w-full flex items-center justify-center">
+   <div className="fixed top-5 lg:top-5 z-40 w-full flex items-center justify-center">
     <div className="lg:w-[90%] w-[130%] object-center">
      <nav className="bg-white mt-0 rounded-2xl mx-4 px-6 py-5 flex items-center justify-between shadow-sm">
       {/* Logo */}
@@ -48,7 +48,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="absolute left-4 right-4 mt-80 bg-white rounded-2xl shadow-lg p-6 z-50 flex flex-col gap-4">
+        <div className="absolute left-4 right-4 mt-96 bg-white rounded-2xl shadow-lg p-6 z-50 flex flex-col gap-4">
           <a href="/" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Home</a>
           <a href="/product" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Product</a>
           <a href="/pricing" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Pricing</a>

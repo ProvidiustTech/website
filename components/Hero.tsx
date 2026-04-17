@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="bg-[#f5f5f7] pt-12 pb-0 px-4 text-center relative overflow-hidden">
+    <section className="bg-[#f5f5f7] pt-12 mt-10 xl:mt-20 pb-0 px-4 text-center relative overflow-hidden">
       {/* Badge */}
       <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm mb-8">
           <img src="/buildicon.svg" alt="" />
