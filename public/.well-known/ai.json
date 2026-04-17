@@ -1,0 +1,26 @@
+{
+  "apis": {
+    "userListData": [
+      {
+        "name": "ProvidiusTech",
+        "description": "AI-powered customer support automation platform",
+        "url": "https://providiustech.com",
+        "category": "customer-support"
+      }
+    ]
+  },
+  "models": [
+    {
+      "model": "gpt-4",
+      "url": "https://providiustech.com",
+      "organization": "ProvidiusTech",
+      "description": "Powering intelligent customer support automation"
+    },
+    {
+      "model": "claude",
+      "url": "https://providiustech.com",
+      "organization": "ProvidiusTech",
+      "description": "Powering intelligent customer support automation"
+    }
+  ]
+}

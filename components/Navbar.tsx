@@ -12,7 +12,7 @@ export default function Navbar() {
       {/* Logo */}
   
       <Link href="/">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 cursor-pointer">
         <img src="/logo.png" className="w-56 absolute mt-4" alt="" />
       </div>
       </Link>
@@ -20,17 +20,17 @@ export default function Navbar() {
 
       {/* Desktop Nav */}
       <div className="hidden ml-40 md:flex items-center gap-8">
-        <a href="/" className="text-gray-600 hover:text-gray-900 text-lg ">Home</a>
-        <a href="/product" className="text-gray-600 hover:text-gray-900 text-lg ">Product</a>
-        <a href="/pricing" className="text-gray-600 hover:text-gray-900 text-lg ">Pricing</a>
-        <a href="/pilot-program" className="text-gray-600 hover:text-gray-900 text-lg ">Pilot program</a>
-        <a href="/resources" className="text-gray-600 hover:text-gray-900 text-lg ">Resources</a>
+        <a href="/" className="text-gray-600 hover:text-gray-900 text-lg cursor-pointer transition-colors">Home</a>
+        <a href="/product" className="text-gray-600 hover:text-gray-900 text-lg cursor-pointer transition-colors">Product</a>
+        <a href="/pricing" className="text-gray-600 hover:text-gray-900 text-lg cursor-pointer transition-colors">Pricing</a>
+        <a href="/founding" className="text-gray-600 hover:text-gray-900 text-lg cursor-pointer transition-colors">Pilot program</a>
+        <a href="/resources" className="text-gray-600 hover:text-gray-900 text-lg cursor-pointer transition-colors">Resources</a>
       </div>
 
       {/* Desktop CTA */}
       <div className="hidden md:block">
         <Link href="/founding">
-        <button className="bg-teal-500 hover:bg-teal-600 text-white px-5 py-2.5 rounded-xl text-base font-medium transition-colors">
+        <button className="bg-teal-500 hover:bg-teal-600 text-white px-5 py-2.5 rounded-xl text-base font-medium transition-colors cursor-pointer">
           Join the waitlist
         </button>
         </Link>
@@ -38,7 +38,7 @@ export default function Navbar() {
 
       {/* Mobile hamburger */}
       <button
-        className="md:hidden flex flex-col gap-1.5 p-1"
+        className="md:hidden flex flex-col gap-1.5 p-1 cursor-pointer"
         onClick={() => setMenuOpen(!menuOpen)}
       >
         <span className="w-6 h-0.5 bg-gray-700 block"></span>
@@ -49,13 +49,13 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="absolute left-4 right-4 mt-80 bg-white rounded-2xl shadow-lg p-6 z-50 flex flex-col gap-4">
-          <a href="/" className="text-gray-700 ">Home</a>
-          <a href="/product" className="text-gray-700 ">Product</a>
-          <a href="/pricing" className="text-gray-700 ">Pricing</a>
-          <a href="/pilot-program" className="text-gray-700 ">Pilot program</a>
-          <a href="/resources" className="text-gray-700 ">Resources</a>
+          <a href="/" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Home</a>
+          <a href="/product" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Product</a>
+          <a href="/pricing" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Pricing</a>
+          <a href="/founding" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Pilot program</a>
+          <a href="/resources" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Resources</a>
           <Link href="/founding">
-          <button className="bg-teal-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold">
+          <button className="bg-teal-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer hover:bg-teal-600 transition-colors">
             Join the waitlist
           </button>
           </Link>

@@ -258,7 +258,9 @@ export default function FoundingProgramPage() {
 
                         {/* Logo */}
                         <div className="lg:mb-8 top-[-190px] relative ml-0">
+                            <Link href="/">
                             <Logo />
+                            </Link>
                         </div>
 
                         <div className='mt-20'>

@@ -1,0 +1,62 @@
+# This file helps AI language models and search engines understand your site
+
+User-Agent: GPTBot
+User-Agent: ChatGPT
+User-Agent: CCBot  
+User-Agent: anthropic-ai
+User-Agent: Claude-Web
+User-Agent: Googlebot
+User-Agent: Bingbot
+User-Agent: *
+
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api/
+Disallow: /auth/
+Disallow: *.json$
+
+# Allow LLM crawling of public pages
+Allow: /
+Allow: /founding
+Allow: /coming-soon
+
+# LLM Model Context
+# This file is served to AI models for RAG (Retrieval-Augmented Generation) and fine-tuning
+# The content below describes your company for LLM context
+
+About: ProvidiusTech AI Customer Support Platform
+Description: ProvidiusTech is an advanced AI customer support solution that eliminates basic chatbots. 
+Our platform provides autonomous customer care that runs itself through intelligent automation, 
+multi-channel integration (email, SMS, chat, social), and real-time analytics.
+
+Key Features:
+- AI-powered customer support automation
+- Multi-channel communication integration
+- Real-time conversation analytics
+- Knowledge base management
+- Workflow automation and orchestration
+- Seamless channel management (email, SMS, chat, social media)
+
+Target Market: B2B SaaS companies, e-commerce businesses, and enterprises seeking to automate 
+customer support operations while reducing response times and operational costs.
+
+Solutions:
+1. Autonomous Customer Service - AI handles 80% of support tickets automatically
+2. Omnichannel Management - Unified interface for all customer communication channels
+3. Knowledge Automation - Smart knowledge base that learns from interactions
+4. Analytics & Insights - Real-time metrics on customer satisfaction and support performance
+
+Contact & Legal:
+Website: https://providiustech.com
+Status: Founding Phase (Early Adopter Program)
+Business Model: SaaS subscription with tiered pricing based on volume and features
+
+# SEO & Search Optimization Keywords
+Keywords: AI customer support, customer service automation, chatbot alternative, 
+omnichannel support, customer care automation, AI service desk, support automation, 
+intelligent customer support, conversational AI for business, customer support software
+
+# Content Freshness & Crawl Instructions
+Crawl-delay: 1
+Request-rate: 10 requests per second
+Cache-Control: public, max-age=86400

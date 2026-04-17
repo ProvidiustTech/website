@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "ProvidiusTech",
+  "url": "https://providiustech.com",
+  "description": "AI-powered customer support platform that automates customer service tickets and manages omnichannel communication.",
+  "logo": "https://providiustech.com/logo.png",
+  "sameAs": [
+    "https://twitter.com/providiustech",
+    "https://linkedin.com/company/providiustech"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "Customer Support",
+    "availableLanguage": [
+      "en"
+    ]
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "US"
+  }
+}

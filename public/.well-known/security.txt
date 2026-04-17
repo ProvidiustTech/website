@@ -1,0 +1,6 @@
+Contact: security@providiustech.com
+Expires: 2027-04-17T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://providiustech.com/.well-known/security.txt
+Policy: https://providiustech.com/security-policy
+Acknowledgments: https://providiustech.com/security-acknowledgments

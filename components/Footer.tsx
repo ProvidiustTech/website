@@ -40,9 +40,9 @@ export default function Footer() {
         <div className="mb-10">
           <p className="text-teal-500 text-xs font-semibold uppercase tracking-wider mb-3">CONTACT US</p>
           <div className="space-y-1">
-            <p className="text-gray-300 text-sm">+1(999) 999-99-99</p>
-            <p className="text-gray-300 text-sm">hello@logoipsum.com</p>
-            <p className="text-gray-300 text-sm">London</p>
+            <p className="text-gray-300 text-sm">+234(999) 999-99-99</p>
+            <p className="text-gray-300 text-sm">support@providiustech.com</p>
+            <p className="text-gray-300 text-sm">Lagos, Nigeria</p>
           </div>
         </div>
 
@@ -97,7 +97,7 @@ export default function Footer() {
           </a>
         </div>
 
-        <p className="text-center text-gray-500 text-xs">© 2024 FastReply AI. All rights reserved.</p>
+        <p className="text-center text-gray-500 text-xs">© 2026 FastReply AI. All rights reserved.</p>
       </div>
     </footer>
   );

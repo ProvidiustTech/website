@@ -1,0 +1,59 @@
+{
+  "name": "ProvidiusTech - AI Customer Support",
+  "short_name": "ProvidiusTech",
+  "description": "Intelligent AI-powered customer support platform that eliminates basic chatbots. Automate support tickets, manage omnichannel communication, and scale customer care.",
+  "url": "https://providiustech.com",
+  "scope": "/",
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "screenshots": [
+    {
+      "src": "/screenshot-1.png",
+      "type": "image/png",
+      "sizes": "540x720",
+      "purpose": "any",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-2.png",
+      "type": "image/png",
+      "sizes": "1280x720",
+      "purpose": "any",
+      "form_factor": "wide"
+    }
+  ],
+  "keywords": [
+    "AI customer support",
+    "chatbot",
+    "customer service automation",
+    "omnichannel support",
+    "customer care automation",
+    "SaaS",
+    "support automation"
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Free Trial",
+      "short_name": "Trial",
+      "description": "Launch your free trial of ProvidiusTech",
+      "url": "/founding",
+      "icons": [
+        {
+          "src": "/favicon.ico",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
