@@ -1,9 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+
 import  Link from "next/link";
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);   // ← New ref for hamburger button
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Ignore clicks on the hamburger button itself
+      if (buttonRef.current && buttonRef.current.contains(event.target as Node)) {
+        return;
+      }
+
+      // Close only if click is truly outside the menu
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
 
   return (
    <div className="fixed top-5 lg:top-5 z-40 w-full flex items-center justify-center">
@@ -13,7 +38,7 @@ export default function Navbar() {
   
       <Link href="/">
       <div className="flex items-center gap-2 cursor-pointer">
-        <img src="/logo.png" className="w-56 absolute mt-4" alt="" />
+        <img src="/logo.png" className="w-56 absolute mt-4 xl:left-28  right-[230px]" alt="" />
       </div>
       </Link>
 
@@ -38,17 +63,34 @@ export default function Navbar() {
 
       {/* Mobile hamburger */}
       <button
-        className="md:hidden flex flex-col gap-1.5 p-1 cursor-pointer"
-        onClick={() => setMenuOpen(!menuOpen)}
-      >
-        <span className="w-6 h-0.5 bg-gray-700 block"></span>
-        <span className="w-6 h-0.5 bg-gray-700 block"></span>
-        <span className="w-6 h-0.5 bg-gray-700 block"></span>
-      </button>
+            ref={buttonRef}                    // ← Attach ref here
+            className="md:hidden flex flex-col gap-1.5 p-1 cursor-pointer relative w-6 h-6"
+            onClick={() => setMenuOpen(!menuOpen)}   // ← Simplified: no need for stopPropagation anymore
+          >
+            {/* Top line */}
+            <span
+              className={`block h-0.5 bg-gray-900 rounded transition-all duration-400 origin-left
+                ${menuOpen ? 'w-6 rotate-45 translate-y-1.5' : 'w-6'}`}
+            ></span>
+
+            {/* Middle line */}
+            <span
+              className={`block h-0.5 bg-gray-900 rounded transition-all duration-400
+                ${menuOpen ? 'opacity' : 'w-6'}`}
+            ></span>
+
+            {/* Bottom line */}
+            <span
+              className={`block h-0.5 left-[11px] font-bold relative bg-gray-900 rounded transition-all duration-400 origin-left
+                ${menuOpen ? 'w-6 -rotate-45 top-[86%] left-[-2px] -translate-y-1.5' : 'w-3 float-right left-[48%] relative'}`}
+            ></span>
+          </button>
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="absolute left-4 right-4 mt-96 bg-white rounded-2xl shadow-lg p-6 z-50 flex flex-col gap-4">
+        <div
+          ref={menuRef}
+        className="absolute left-4 right-4 mt-96 bg-white rounded-2xl shadow-lg p-6 z-50 flex flex-col gap-4">
           <a href="/" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Home</a>
           <a href="/product" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Product</a>
           <a href="/pricing" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Pricing</a>
