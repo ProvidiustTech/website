@@ -70,7 +70,7 @@ export default function Navbar() {
             {/* Top line */}
             <span
               className={`block h-0.5 bg-gray-900 rounded transition-all duration-400 origin-left
-                ${menuOpen ? 'w-6 rotate-45 translate-y-1.5' : 'w-6'}`}
+                ${menuOpen ? 'relative top-[-10px] w-6 rotate-45 translate-y-1.5' : 'w-6'}`}
             ></span>
 
             {/* Middle line */}
@@ -82,7 +82,7 @@ export default function Navbar() {
             {/* Bottom line */}
             <span
               className={`block h-0.5 left-[11px] font-bold relative bg-gray-900 rounded transition-all duration-400 origin-left
-                ${menuOpen ? 'w-6 -rotate-45 top-[86%] left-[-2px] -translate-y-1.5' : 'w-3 float-right left-[48%] relative'}`}
+                ${menuOpen ? 'relative w-6 -rotate-45 top-[26%] left-[-2px] -translate-y-1.5' : 'w-3 float-right left-[48%] relative'}`}
             ></span>
           </button>
 
