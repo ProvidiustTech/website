@@ -125,7 +125,7 @@ export default function Footer() {
                 <div>
                   <p className="text-[#0D9488] text-md font-medium uppercase tracking-wider mb-4">CONTACT US</p>
                   <div className="space-y-3">
-                    <p className="text-gray-300 text-sm">+1 (999) 999-99-99</p>
+                    <p className="text-gray-300 text-sm">+234 9031 419 134</p>
                     <p className="text-gray-300 text-sm">support@providiustech.com</p>
                     <p className="text-gray-300 text-sm">Lagos</p>
                   </div>
