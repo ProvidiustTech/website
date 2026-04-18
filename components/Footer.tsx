@@ -73,7 +73,7 @@ export default function Footer() {
                     placeholder="MAIL"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-transparent border border-[#334155] text-white rounded-2xl px-4 py-3 text-sm text-[gray-300] placeholder-white outline-none focus:border-[#0D9488] transition-colors"
+                    className="w-full bg-transparent border border-[#334155] text-white rounded-2xl px-4 py-3 text-sm text-[gray-300] placeholder-gray-600 outline-none focus:border-[#0D9488] transition-colors"
                     required
                     disabled={isLoading}
                   />
