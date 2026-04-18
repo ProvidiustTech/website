@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (source === 'coming-soon' && !email?.trim()) {
+    if ((source === 'coming-soon' || source === 'feedback') && !email?.trim()) {
       return Response.json(
         { error: 'Email is required' },
         { status: 400 }
@@ -41,8 +41,11 @@ export async function POST(request: Request) {
     // Send email notification
     if (process.env.RESEND_API_KEY) {
       try {
-        const emailBody = source === 'founding'
-          ? `
+        let emailBody: string;
+        let subject: string;
+
+        if (source === 'founding') {
+          emailBody = `
             <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
               <div style="background-color: white; border-radius: 8px; padding: 20px; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #0a0a14; margin-top: 0;">New Founding Program Application ✨</h2>
@@ -58,8 +61,24 @@ export async function POST(request: Request) {
                 <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/applications" style="background-color: #14B8A6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">View in Admin Dashboard</a></p>
               </div>
             </div>
-          `
-          : `
+          `;
+          subject = `New Founding Application: ${company}`;
+        } else if (source === 'feedback') {
+          emailBody = `
+            <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+              <div style="background-color: white; border-radius: 8px; padding: 20px; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #0a0a14; margin-top: 0;">New Feedback Request 💬</h2>
+                <p><strong>Name:</strong> ${company}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Submitted:</strong> ${new Date(submission.createdAt).toLocaleString()}</p>
+                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/applications" style="background-color: #14B8A6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">View in Admin Dashboard</a></p>
+              </div>
+            </div>
+          `;
+          subject = `New Feedback Request: ${company || email}`;
+        } else {
+          emailBody = `
             <div style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
               <div style="background-color: white; border-radius: 8px; padding: 20px; max-width: 600px; margin: 0 auto;">
                 <h2 style="color: #0a0a14; margin-top: 0;">New Coming Soon Signup</h2>
@@ -70,13 +89,13 @@ export async function POST(request: Request) {
               </div>
             </div>
           `;
+          subject = `New Coming Soon Signup: ${email}`;
+        }
 
         const emailResult = await resend.emails.send({
           from: 'Providius <onboarding@resend.dev>',
           to: 'support@providiustech.com',
-          subject: source === 'founding' 
-            ? `New Founding Application: ${company}`
-            : `New Coming Soon Signup: ${email}`,
+          subject,
           html: emailBody,
         });
       } catch (emailError) {

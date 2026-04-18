@@ -7,16 +7,41 @@ export default function Footer() {
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage(null);
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+
+    try {
+      const response = await fetch('/api/applications', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          company: name,
+          source: 'feedback',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: 'Request sent! We\'ll get back to you soon.' });
+        setName('');
+        setEmail('');
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Failed to send request. Please try again.' });
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setMessage({ type: 'error', text: 'Something went wrong. Please try again.' });
+    } finally {
       setIsLoading(false);
-      setName('');
-      setEmail('');
-    }, 1500);
+    }
   };
 
   return (
@@ -28,7 +53,7 @@ export default function Footer() {
             <FadeInOnScroll direction="left">
               <div className="border border-none border-opacity-40 xl:mx-0 mx-3 rounded-3xl p-8 backdrop-blur-sm bg-[#17181C] bg-opacity-60">
                 <p className="text-[#0D9488] text-md font-medium uppercase tracking-wider mb-4">Feedback</p>
-                <h3 className="text-2xl font-black text-white mb-6 leading-tight">
+                <h3 className="text-md font-medium text-[#ffffff7c] mb-6 leading-tight">
                   Seeking personalized support?{' '}
                   <span className="text-white">Request a message from our team</span>
                 </h3>
@@ -41,15 +66,26 @@ export default function Footer() {
                     onChange={(e) => setName(e.target.value)}
                     className="w-full bg-transparent border border-[#334155] rounded-2xl px-4 py-3 text-sm text-gray-300 placeholder-gray-600 outline-none focus:border-[#0D9488] transition-colors"
                     required
+                    disabled={isLoading}
                   />
                   <input
                     type="email"
                     placeholder="MAIL"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-transparent border border-[#334155] rounded-2xl px-4 py-3 text-sm text-[gray-300] placeholder-gray-600 outline-none focus:border-[#0D9488] transition-colors"
+                    className="w-full bg-transparent border border-[#334155] text-white rounded-2xl px-4 py-3 text-sm text-[gray-300] placeholder-white outline-none focus:border-[#0D9488] transition-colors"
                     required
+                    disabled={isLoading}
                   />
+                  {message && (
+                    <div className={`text-sm px-4 py-2 rounded-xl ${
+                      message.type === 'success' 
+                        ? 'bg-green-500/20 text-green-300 border border-green-500/30' 
+                        : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                    }`}>
+                      {message.text}
+                    </div>
+                  )}
                   <button
                     type="submit"
                     disabled={isLoading}
@@ -67,7 +103,7 @@ export default function Footer() {
 
             {/* Middle Column - Info & Contact */}
             <FadeInOnScroll delay={100}>
-              <div className="space-y-12 xl:mx-0 mx-3">
+              <div className="space-y-12 xl:mx-0 mx-5">
                 {/* INFO Section */}
                 <div>
                   <p className="text-[#0D9488] text-md font-medium uppercase tracking-wider mb-4">INFO</p>
@@ -99,7 +135,7 @@ export default function Footer() {
 
             {/* Right Column - About Us and Logo */}
             <FadeInOnScroll direction="right">
-              <div className="flex xl:flex-col flex-row xl:mx-0 mx-3xl;mt-0   float-right mt-[-170px] justify-between h-full">
+              <div className="flex xl:flex-col flex-row xl:mx-0 mx-3 xl:mt-[205px] mr-[20px] xl:mr-0  float-right mt-[-170px] justify-between h-full">
                 {/* ABOUT US Section */}
                 <div>
                   <p className="text-[#0D9488] text-md font-medium uppercase tracking-wider mb-4">ABOUT US</p>
@@ -135,21 +171,22 @@ export default function Footer() {
         <FadeInOnScroll>
           <div className="flex items-center justify-center mb-4 gap-6 xl:mb-12 mt-[-140px] pt-12 ">
             {[
-              { icon: 'facebook', href: '#', label: 'Facebook' },
-              { icon: 'instagram', href: '#', label: 'Instagram' },
-              { icon: 'youtube', href: '#', label: 'YouTube' },
-              { icon: 'twitter', href: '#', label: 'Twitter' },
+              { icon: 'github', href: '#', label: 'github' },
+              { icon: 'instagram', href: 'https://www.instagram.com/providiustech?igsh=MWRhOXZ2bHppZWN0dQ==', label: 'Instagram' },
+              { icon: 'linkedin', href: 'https://www.linkedin.com/company/providiustech/', label: 'LinkedIn' },
+              { icon: 'twitter', href: 'https://x.com/providiustech', label: 'Twitter' },
             ].map((social) => (
               <a
                 key={social.icon}
                 href={social.href}
                 aria-label={social.label}
-                className="w-12 h-12 rounded-full border border-[#334155] flex items-center justify-center text-gray-400 hover:text-[#0D9488] hover:border-[#0D9488] transition-all duration-300 hover:bg-[#0D9488] hover:bg-opacity-10"
+                className="w-12 h-12  border border-none flex items-center justify-center text-gray-400 hover:text-[#0D9488] hover:border-[#0D9488] transition-all duration-300 hover:bg-[#0D9488] hover:bg-opacity-10"
               >
-                {social.icon === 'facebook' && (
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                  </svg>
+                {social.icon === 'github' && (
+                 <svg xmlns="http://www.w3.org/2000/svg"  fill="currentColor"  width="20" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg>
+
                 )}
                 {social.icon === 'instagram' && (
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -157,10 +194,11 @@ export default function Footer() {
                     <path d="M12 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.322a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
                   </svg>
                 )}
-                {social.icon === 'youtube' && (
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19.615 3.175h-15.23c-2.432 0-4.385 1.953-4.385 4.385v9.88c0 2.432 1.953 4.385 4.385 4.385h15.23c2.432 0 4.385-1.953 4.385-4.385v-9.88c0-2.432-1.953-4.385-4.385-4.385zm-8.307 11.613v-5.872l4.631 2.936-4.631 2.936z" />
-                  </svg>
+                {social.icon === 'linkedin' && (
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" data-supported-dps="24x24" width="24" height="24" focusable="false">
+  <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
+</svg>
+
                 )}
                 {social.icon === 'twitter' && (
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

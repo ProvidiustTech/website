@@ -1,6 +1,6 @@
 export default function AutomateSection() {
   return (
-    <section className="bg-[#f5f5f7] m-8 py-16 px-4 md:px-8 w-98 xl:w-full overflow-hidden">
+    <section className="bg-[#f5f5f7] xl:mt-0 mt-[-60px] m-8 py-16 px-4 md:px-8 w-98 xl:w-full overflow-hidden">
       {/* Section header */}
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-12">

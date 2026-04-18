@@ -25,7 +25,7 @@ export default function ApplicationsPage() {
   const [passwordInput, setPasswordInput] = useState('')
   const [inactivityTimer, setInactivityTimer] = useState<NodeJS.Timeout | null>(null)
   const [lastActivityTime, setLastActivityTime] = useState<number>(Date.now())
-  const [filterSource, setFilterSource] = useState<'all' | 'founding' | 'coming-soon'>('all')
+  const [filterSource, setFilterSource] = useState<'all' | 'founding' | 'coming-soon' | 'feedback'>('all')
 
   useEffect(() => {
     const authStatus = sessionStorage.getItem('admin-authenticated');
@@ -144,7 +144,7 @@ export default function ApplicationsPage() {
 
     const headers = ['Type', 'Company/Email', 'Company Name', 'Channel', 'Volume', 'Challenge', 'Submitted'];
     const rows = filteredApps.map(app => [
-      app.source === 'founding' ? 'Founding' : 'Coming Soon',
+      app.source === 'founding' ? 'Founding' : app.source === 'coming-soon' ? 'Coming Soon' : 'Feedback',
       app.source === 'founding' ? app.company : app.email,
       app.industry || '',
       app.channel || '',
@@ -251,7 +251,7 @@ export default function ApplicationsPage() {
         </div>
 
         {/* Filter Section */}
-        <div className="mb-6 flex gap-3">
+        <div className="mb-6 flex gap-3 flex-wrap">
           <button
             onClick={() => setFilterSource('all')}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -280,7 +280,17 @@ export default function ApplicationsPage() {
                 : 'bg-[#1a1a2a] text-gray-400 hover:bg-[#2a2a3a]'
             }`}
           >
-           Coming Soon ({applications.filter(a => a.source === 'coming-soon').length})
+            Coming Soon ({applications.filter(a => a.source === 'coming-soon').length})
+          </button>
+          <button
+            onClick={() => setFilterSource('feedback')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              filterSource === 'feedback'
+                ? 'bg-green-500 text-white'
+                : 'bg-[#1a1a2a] text-gray-400 hover:bg-[#2a2a3a]'
+            }`}
+          >
+            Feedback ({applications.filter(a => a.source === 'feedback').length})
           </button>
         </div>
 
@@ -371,9 +381,11 @@ export default function ApplicationsPage() {
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                           app.source === 'founding'
                             ? 'bg-blue-500/20 text-blue-400'
-                            : 'bg-purple-500/20 text-purple-400'
+                            : app.source === 'coming-soon'
+                            ? 'bg-purple-500/20 text-purple-400'
+                            : 'bg-green-500/20 text-green-400'
                         }`}>
-                          {app.source === 'founding' ? 'Founding' : 'Coming Soon'}
+                          {app.source === 'founding' ? 'Founding' : app.source === 'coming-soon' ? 'Coming Soon' : 'Feedback'}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-white font-medium">{app.source === 'founding' ? app.company : app.email}</td>

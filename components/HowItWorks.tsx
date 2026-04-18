@@ -21,7 +21,13 @@ export default function HowItWorks() {
       </p>
 
       {/* Three cards - desktop horizontal, mobile vertical */}
-      <img src="/threecards.png" className="lg:w-[92%] ml-0 lg:m-16" alt="" />
+
+      <div className="xl:flex w-[95%] h-[60%] ml-3 justify-center xl:ml-16">
+
+      <img src="/oneofthree.png" className="lg:w-[32%] xl:h-[40%]" alt="" />
+      <img src="/twoofthree.png" className="lg:w-[32%] xl:h-[40%]" alt="" />
+      <img src="/threeofthree.png" className="lg:w-[32%] " alt="" />
+      </div>
       
       {/* </div> */}
     </section>
