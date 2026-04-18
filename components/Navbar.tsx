@@ -38,7 +38,7 @@ export default function Navbar() {
   
       <Link href="/">
       <div className="flex items-center gap-2 cursor-pointer">
-        <img src="/logo.png" className="w-56 absolute mt-4 xl:left-28  right-[230px]" alt="" />
+        <img src="/logo.png" className="w-56 absolute mt-4 xl:left-28  right-[200px]" alt="" />
       </div>
       </Link>
 
