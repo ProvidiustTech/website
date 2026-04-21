@@ -16,22 +16,14 @@ function Logo() {
 /* ── Integration icons row ──────────────────────────────────────────────── */
 function IntegrationIcons() {
     // Coloured icon placeholders matching the screenshot: HubSpot, Paystack, Slack, Stripe, WhatsApp, Salesforce
-    const icons = [
-        { label: 'HubSpot', bg: '#FF7A59', letter: 'H' },
-        { label: 'Paystack', bg: '#00C3F7', letter: 'P' },
-        { label: 'Slack', bg: '#4A154B', letter: 'S' },
-        { label: 'Stripe', bg: '#635BFF', text: 'stripe', textColor: '#635BFF' },
-        { label: 'WhatsApp', bg: '#25D366', letter: 'W' },
-        { label: 'Salesforce', bg: '#00A1E0', letter: 'SF' },
-    ]
+  
     return (
         <div className="flex items-center justify-center gap-7 flex-wrap">
-            <img src="./shopifyicon.png" className='w-8' alt="" />
-            <img src="./paypal.png" className='w-7' alt="" />
-            <img src="./slack.png" className='w-8' alt="" />
-            <img src="./stripe.png" className='w-14' alt="" />
             <img src="./whatsappicon.png" className='w-7' alt="" />
-            <img src="./zendesk.png" className='w-40' alt="" />
+            <img src="./telegram.png" className='w-8' alt="" />
+            <img src="./email.png" className='w-8' alt="" />
+            <img src="./instagram.png" className='w-8' alt="" />
+
             {/* {icons.map(ic => (
                 ic.text
                     ? <span key={ic.label} className="text-sm font-bold" style={{ color: ic.textColor }}>{ic.text}</span>
@@ -179,10 +171,10 @@ function ApplyModal({ onClose }: { onClose: () => void }) {
                                             <select value={form.channel} onChange={set('channel')} disabled={isLoading} className={selectCls}>
                                                 <option value="" disabled hidden>Select Channel</option>
                                                 <option value="webchat">Website Chat</option>
-                                                {/* <option value="email">Website chat</option> */}
                                                 <option value="whatsapp">WhatsApp</option>
+                                                <option value="telegram">Telegram</option>
                                                 <option value="instagram">Instagram</option>
-                                                <option value="email">Email</option>
+                                                <option value="gmail">Email</option>
                                             </select>
                                             <svg className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" width="14" height="14" viewBox="0 0 24 24" fill="none">
                                                 <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

@@ -17,7 +17,7 @@ function EyeSlashIcon() {
       />
       {/* Pupil */}
       <circle cx="40" cy="32" r="9" stroke="#2DD4BF" strokeWidth="3.5" fill="none"/>
-      {/* Slash line — diagonal */}
+      {/* Slash line,diagonal */}
       <line x1="12" y1="8" x2="68" y2="56" stroke="#2DD4BF" strokeWidth="4.5" strokeLinecap="round"/>
     </svg>
   )
@@ -105,7 +105,7 @@ export default function ComingSoonPage() {
       {/* Blurred background content */}
       <BlurredBg />
 
-      {/* Navbar — sits above blur */}
+      {/* Navbar,sits above blur */}
       <Navbar />
 
       {/* Centred overlay card */}

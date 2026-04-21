@@ -1,5 +1,5 @@
 // src/app/sitemap.ts
-// Next.js 14 Metadata API sitemap — auto-served at /sitemap.xml
+// Next.js 14 Metadata API sitemap,auto-served at /sitemap.xml
 // Docs: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 
 import { MetadataRoute } from 'next'
@@ -58,7 +58,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.4,
     },
 
-    // ── Dashboard (authenticated — lower priority for crawlers) ────────────
+    // ── Dashboard (authenticated,lower priority for crawlers) ────────────
     {
       url: `${BASE_URL}/dashboard`,
       lastModified: now,

@@ -7,7 +7,7 @@ const nextConfig = {
     cpus: 1,                // Limit to single core
   },
   typescript: {
-    ignoreBuildErrors: true,   // Temporary — only if you have TS errors
+    ignoreBuildErrors: true,   // Temporary,only if you have TS errors
   },
   eslint: {
     ignoreDuringBuilds: true,  // Safe in Next.js 16

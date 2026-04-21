@@ -55,7 +55,7 @@ export default function Navbar() {
       {/* Desktop CTA */}
       <div className="hidden md:block">
         <Link href="/founding">
-        <button className="bg-teal-500 hover:bg-teal-600 text-white px-5 py-2.5 rounded-xl text-base font-medium transition-colors cursor-pointer">
+        <button className="bg-teal-500 cursor-pointer hover:bg-teal-600 text-white px-5 py-2.5 rounded-xl text-base font-medium transition-colors cursor-pointer">
           Join the waitlist
         </button>
         </Link>
@@ -97,7 +97,7 @@ export default function Navbar() {
           <a href="/founding" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Pilot program</a>
           <a href="/resources" className="text-gray-700 cursor-pointer hover:text-gray-900 transition-colors">Resources</a>
           <Link href="/founding">
-          <button className="bg-teal-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer hover:bg-teal-600 transition-colors">
+          <button className="bg-teal-500 cursor-pointer text-white px-5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer hover:bg-teal-600 transition-colors">
             Join the waitlist
           </button>
           </Link>

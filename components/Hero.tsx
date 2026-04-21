@@ -29,7 +29,7 @@ export default function Hero() {
       {/* CTAs */}
       <div className="flex flex-col md:flex-row gap-4 justify-center mb-16">
        <Link href="/founding">
-        <button className="bg-gradient-to-r px-32 from-blue-500 to-teal-400 text-white lg:px-8 py-4 rounded-2xl text-lg font-medium hover:opacity-90 transition-opacity">
+        <button className="bg-gradient-to-r px-32 cursor-pointer from-blue-500 to-teal-400 text-white lg:px-8 py-4 rounded-2xl text-lg font-medium hover:opacity-90 transition-opacity">
           Join the waitlist
         </button>
         </Link>

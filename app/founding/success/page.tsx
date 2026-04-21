@@ -103,10 +103,10 @@ export default function ApplicationSuccessPage() {
         <div className="min-h-screen bg-black flex items-center justify-center p-4 sm:p-8">
             <div className="relative w-full max-w-[740px] bg-[#0d0d15] border border-[#1e1e2e] rounded-2xl overflow-hidden">
 
-                {/* Confetti — fills entire card */}
+                {/* Confetti,fills entire card */}
                 <Confetti />
 
-                {/* Content — sits above canvas */}
+                {/* Content,sits above canvas */}
                 <div className="relative z-10 px-8 sm:px-16 py-16 sm:py-20 text-center">
                     <CheckCircle />
 

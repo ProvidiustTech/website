@@ -11,7 +11,7 @@ const faqs = [
 
 const answers: Record<string, string> = {
   "Is this just another AI chatbot?": "No.\nProvidius goes beyond basic Automated chatbots.\nIt understands context, uses your knowledge, and improves over time so conversations feel more natural and accurate.",
-  "What is Providius?": "Providius is an AI-powered customer support platform that automates conversations across WhatsApp, web chat, and more — trained on your business knowledge.",
+  "What is Providius?": "Providius is an AI-powered customer support platform that automates conversations across WhatsApp, web chat, and more, trained on your business knowledge.",
   "Do I need technical skills to use it?": "No technical skills required. Providius is designed for business teams. You can set up your knowledge base and start handling customer messages in minutes.",
   "Is my customer's data safe?": "Yes. We use industry-standard encryption and never share your data with third parties. Full GDPR compliance is built in.",
   "How long does it take to set up?": "Most teams are up and running within 24 hours. Simply connect your channels, upload your knowledge base, and Providius handles the rest.",
@@ -22,7 +22,7 @@ export default function FAQSection() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <section className="bg-[#000000] py-16 px-4 md:px-8 w-full overflow-hidden">
+    <section className="bg-[#000000] py-16 px-7 md:px-8 w-full overflow-hidden">
       {/* Badge */}
       <div className="flex justify-center mb-8">
         <div className="inline-flex items-center gap-2 bg-[#1f2937] border border-[#374151] rounded-full px-4 py-2">

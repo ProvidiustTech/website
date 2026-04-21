@@ -6,7 +6,7 @@ export default function HowItWorks() {
 
       <div className="flex justify-center mb-6">
         <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm">
-            <img src="/check1.png" className="w-5 lg:w-10" alt="" />
+            <img src="/check1.png" className="w-10 lg:w-10" alt="" />
           
           <span className="text-gray-600 text-sm font-medium">Turn conversations into resolutions.</span>
         </div>
