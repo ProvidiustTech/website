@@ -11,6 +11,9 @@ export function middleware(request: NextRequest) {
     '/founding',              // founding program page
     '/admin',                 // admin dashboard
     '/admin/applications',    // admin applications section
+    '/blog',                   // blog listing page
+    '/blog/automate-customer-support-ecommerce', // individual blog post page
+    // Add more functional routes as needed
   ];
 
   // CRITICAL: Protect API routes, static files, etc. - let them through without modification

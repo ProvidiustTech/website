@@ -1,0 +1,188 @@
+"use client";
+// app/admin/blog/page.tsx — Admin: publish a new blog post
+// Protect this route with middleware/auth in production.
+
+import { useState } from "react";
+import Navbar from "@/components/Navbar";
+
+const ALL_TAGS = ["E-commerce", "Enterprise AI", "Sales", "Automation", "Customer Support"] as const;
+type Tag = (typeof ALL_TAGS)[number];
+type Status = "idle" | "loading" | "success" | "error";
+
+const inputCls =
+  "w-full bg-[#F8FAFB] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#1A1F2E] placeholder-[#9CA3AF] focus:outline-none focus:ring-2 focus:ring-[#1BAA87]/30 focus:border-[#1BAA87] transition-colors";
+
+function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-sm font-semibold text-[#374151] mb-1.5">
+        {label}{required && <span className="text-[#1BAA87] ml-0.5">*</span>}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+export default function AdminBlogPage() {
+  const [title, setTitle] = useState("");
+  const [excerpt, setExcerpt] = useState("");
+  const [content, setContent] = useState("");
+  const [author, setAuthor] = useState("ProvidIusTech Media");
+  const [readingTime, setReadingTime] = useState(4);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [featured, setFeatured] = useState(false);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+  const [message, setMessage] = useState("");
+
+  function toggleTag(t: Tag) {
+    setTags((prev) => prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]);
+  }
+
+  function handleCover(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setCoverFile(f);
+    setCoverPreview(URL.createObjectURL(f));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!title || !excerpt || !content) {
+      setStatus("error"); setMessage("Title, excerpt, and content are required."); return;
+    }
+    setStatus("loading");
+    const fd = new FormData();
+    fd.append("title", title); fd.append("excerpt", excerpt); fd.append("content", content);
+    fd.append("author", author); fd.append("readingTime", String(readingTime));
+    fd.append("tags", JSON.stringify(tags)); fd.append("featured", String(featured));
+    if (coverFile) fd.append("cover", coverFile);
+    try {
+      const res = await fetch("/api/blog/create", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Error");
+      setStatus("success"); setMessage(`Published! View at /blog/${data.slug}`);
+      setTitle(""); setExcerpt(""); setContent(""); setTags([]); setFeatured(false);
+      setCoverFile(null); setCoverPreview("");
+    } catch (err) {
+      setStatus("error"); setMessage(err instanceof Error ? err.message : "Something went wrong.");
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F4F6F8]">
+      <Navbar />
+
+      <div className="max-w-2xl mx-auto px-4 py-12">
+        <div className="mb-7">
+          <span className="inline-block text-xs font-semibold bg-[#E6F7F4] text-[#1BAA87] px-3 py-1 rounded-full mb-3">Admin</span>
+          <h1 className="text-2xl font-bold text-[#1A1F2E]">Create New Blog Post</h1>
+          <p className="text-sm text-[#6B7280] mt-1">Posts go live immediately after publishing.</p>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <Field label="Post Title" required>
+              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}
+                placeholder="How to Automate Customer Support…" className={inputCls} />
+            </Field>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <Field label="Author">
+                <input type="text" value={author} onChange={(e) => setAuthor(e.target.value)} className={inputCls} />
+              </Field>
+              <Field label="Reading Time (min)">
+                <input type="number" min={1} max={60} value={readingTime}
+                  onChange={(e) => setReadingTime(Number(e.target.value))} className={inputCls} />
+              </Field>
+            </div>
+
+            <Field label="Tags">
+              <div className="flex flex-wrap gap-2 mt-1">
+                {ALL_TAGS.map((t) => (
+                  <button key={t} type="button" onClick={() => toggleTag(t)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors
+                      ${tags.includes(t)
+                        ? "bg-[#1BAA87] border-[#1BAA87] text-white"
+                        : "bg-white border-gray-200 text-[#6B7280] hover:border-[#1BAA87] hover:text-[#1BAA87]"
+                      }`}>
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </Field>
+
+            <Field label="">
+              <label className="flex items-center gap-3 cursor-pointer select-none">
+                <div onClick={() => setFeatured((v) => !v)}
+                  className={`relative w-10 h-5 rounded-full transition-colors ${featured ? "bg-[#1BAA87]" : "bg-gray-200"}`}>
+                  <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${featured ? "left-5" : "left-0.5"}`} />
+                </div>
+                <span className="text-sm text-[#374151] font-medium">Mark as Featured post</span>
+              </label>
+            </Field>
+
+            <Field label="Cover Image">
+              <label className="block cursor-pointer">
+                <div className={`relative border-2 border-dashed rounded-2xl p-5 text-center transition-colors
+                  ${coverPreview ? "border-[#1BAA87]" : "border-gray-200 hover:border-[#1BAA87]"}`}>
+                  {coverPreview
+                    // eslint-disable-next-line @next/next/no-img-element
+                    ? <img src={coverPreview} alt="preview" className="mx-auto max-h-40 rounded-lg object-contain" />
+                    : <div className="py-5">
+                        <svg className="w-8 h-8 text-[#9CA3AF] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <p className="text-xs text-[#9CA3AF]">Click to upload cover (JPG, PNG, WebP · 1200×630 recommended)</p>
+                      </div>
+                  }
+                  <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleCover} />
+                </div>
+              </label>
+              {coverPreview && (
+                <button type="button" onClick={() => { setCoverFile(null); setCoverPreview(""); }}
+                  className="mt-1.5 text-xs text-red-500 hover:underline">Remove image</button>
+              )}
+            </Field>
+
+            <Field label="Excerpt" required>
+              <textarea rows={3} value={excerpt} onChange={(e) => setExcerpt(e.target.value)}
+                placeholder="A short compelling summary shown on listing cards…"
+                className={`${inputCls} resize-none`} />
+            </Field>
+
+            <Field label="Content (HTML)" required>
+              <textarea rows={14} value={content} onChange={(e) => setContent(e.target.value)}
+                placeholder={"<h2>Introduction</h2>\n<p>Your content here…</p>"}
+                className={`${inputCls} resize-y font-mono text-xs leading-relaxed`} />
+              <p className="mt-1 text-xs text-[#9CA3AF]">Supported tags: h2, h3, p, ul, li, strong, em, a</p>
+            </Field>
+
+            {status === "error" && (
+              <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 text-sm">{message}</div>
+            )}
+            {status === "success" && (
+              <div className="bg-[#E6F7F4] border border-[#A7E3D4] text-[#0E7A5A] rounded-xl px-4 py-3 text-sm font-medium">✓ {message}</div>
+            )}
+
+            <button type="submit" disabled={status === "loading"}
+              className="w-full bg-[#1BAA87] hover:bg-[#169A79] disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition-colors shadow-sm text-sm">
+              {status === "loading" ? "Publishing…" : "Publish Post"}
+            </button>
+          </form>
+        </div>
+
+        <div className="mt-5 bg-white rounded-xl border border-gray-100 p-5 text-xs text-[#6B7280]">
+          <p className="font-semibold text-[#1A1F2E] mb-2 text-sm">Tips</p>
+          <ul className="space-y-1 list-disc list-inside">
+            <li>Titles under 80 characters work best for SEO.</li>
+            <li>Cover images at 1200×630 px display perfectly across all cards.</li>
+            <li>Use <code className="bg-gray-100 px-1 rounded">h2</code> for sections, <code className="bg-gray-100 px-1 rounded">h3</code> for sub-sections — these auto-populate the sidebar TOC.</li>
+            <li>Only one post should be marked Featured (it appears in the hero slot).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
