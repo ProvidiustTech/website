@@ -1,31 +1,26 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-  binaryTargets   = ["native", "linux-musl"]
-
-
-}
-
 model Submission {
   id           Int      @id @default(autoincrement())
   company      String?  @db.VarChar(255)
-  companyEmail String?  @db.VarChar(255)
-  gmail String?  @db.VarChar(255)
   industry     String?  @db.VarChar(100)
   channel      String?  @db.VarChar(100)
   volume       String?  @db.VarChar(100)
   challenge    String?  @db.Text
+  createdAt    DateTime @default(now())
+  companyEmail String?  @db.VarChar(255)
   email        String?  @db.VarChar(255)
   source       String   @default("founding") @db.VarChar(50)
-  createdAt    DateTime @default(now())
-  
+
   @@index([createdAt])
   @@index([source])
-
   @@map("submissions")
 }
-
