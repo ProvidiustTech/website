@@ -22,6 +22,11 @@ export const metadata: Metadata = {
     telephone: false,
     address: false,
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ProvidiusTech",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -64,8 +69,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* PWA Meta Tags */}
+        <meta name="theme-color" content="#1BAA87" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="ProvidiusTech" />
+        <meta name="msapplication-TileColor" content="#1BAA87" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+      </head>
       <body className="font-degular">
         {children}
+        {/* Service Worker Registration */}
+        <script dangerouslySetInnerHTML={{__html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/sw.js')
+                .then((reg) => console.log('Service Worker registered:', reg))
+                .catch((err) => console.error('Service Worker registration failed:', err));
+            });
+          }
+        `}} />
       </body>
       <SpeedInsights />
     </html>

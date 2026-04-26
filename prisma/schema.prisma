@@ -8,6 +8,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model BlogPost {
+  id            Int      @id @default(autoincrement())
+  slug          String   @unique @db.VarChar(255)
+  title         String   @db.VarChar(500)
+  excerpt       String   @db.Text
+  content       String   @db.LongText
+  coverImage    String   @db.VarChar(500)
+  author        String   @db.VarChar(255)
+  publishedAt   DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  readingTime   Int      @default(4)
+  tags          String   @db.Text  // Stored as JSON string array
+  featured      Boolean  @default(false)
+  images        String   @db.Text  // Stored as JSON string array for 2-3 images
+  createdAt     DateTime @default(now())
+
+  @@index([slug])
+  @@index([featured])
+  @@index([publishedAt])
+  @@map("blog_posts")
+}
+
 model Submission {
   id           Int      @id @default(autoincrement())
   company      String?  @db.VarChar(255)

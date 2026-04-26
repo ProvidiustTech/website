@@ -32,21 +32,39 @@ export async function POST(req: NextRequest) {
     if (coverFile && coverFile.size > 0) {
       const bytes = await coverFile.arrayBuffer();
       const ext = coverFile.name.split(".").pop() ?? "jpg";
-      const filename = `${slug}.${ext}`;
+      const filename = `${slug}-cover.${ext}`;
       const dir = path.join(process.cwd(), "public", "blog-images");
       await mkdir(dir, { recursive: true });
       await writeFile(path.join(dir, filename), Buffer.from(bytes));
       coverImage = `/blog-images/${filename}`;
     }
 
+    // Handle additional images
+    const images: string[] = [];
+    for (let i = 0; i < 3; i++) {
+      const imageFile = fd.get(`image-${i}`) as File | null;
+      if (imageFile && imageFile.size > 0) {
+        const bytes = await imageFile.arrayBuffer();
+        const ext = imageFile.name.split(".").pop() ?? "jpg";
+        const filename = `${slug}-img-${i + 1}.${ext}`;
+        const dir = path.join(process.cwd(), "public", "blog-images");
+        await mkdir(dir, { recursive: true });
+        await writeFile(path.join(dir, filename), Buffer.from(bytes));
+        images.push(`/blog-images/${filename}`);
+      }
+    }
+
     const post: BlogPost = {
       slug, title, excerpt, content, author, readingTime, featured, tags,
-      coverImage, publishedAt: new Date().toISOString(),
+      coverImage, publishedAt: new Date().toISOString(), images: images.length > 0 ? images : undefined,
     };
 
-    addPost(post);
+    const created = await addPost(post);
+    if (!created) {
+      return NextResponse.json({ error: "Failed to create post" }, { status: 500 });
+    }
 
-    return NextResponse.json({ slug, message: "Published." }, { status: 201 });
+    return NextResponse.json({ slug, id: created.id, message: "Published." }, { status: 201 });
   } catch (err) {
     console.error("[blog/create]", err);
     return NextResponse.json({ error: "Internal server error." }, { status: 500 });

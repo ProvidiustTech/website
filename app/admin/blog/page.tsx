@@ -1,9 +1,10 @@
 "use client";
 // app/admin/blog/page.tsx — Admin: publish a new blog post
-// Protect this route with middleware/auth in production.
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 const ALL_TAGS = ["E-commerce", "Enterprise AI", "Sales", "Automation", "Customer Support"] as const;
 type Tag = (typeof ALL_TAGS)[number];
@@ -24,6 +25,8 @@ function Field({ label, required, children }: { label: string; required?: boolea
 }
 
 export default function AdminBlogPage() {
+  const router = useRouter();
+  const { authenticated, loading: authLoading } = useAdminAuth();
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
@@ -33,8 +36,25 @@ export default function AdminBlogPage() {
   const [featured, setFeatured] = useState(false);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState("");
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#F4F6F8] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1BAA87] border-t-transparent mx-auto mb-4"></div>
+          <p className="text-[#6B7280]">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authenticated) {
+    return null; // Redirect happens in useAdminAuth
+  }
 
   function toggleTag(t: Tag) {
     setTags((prev) => prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]);
@@ -45,6 +65,17 @@ export default function AdminBlogPage() {
     if (!f) return;
     setCoverFile(f);
     setCoverPreview(URL.createObjectURL(f));
+  }
+
+  function handleImages(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []).slice(0, 3);
+    setImageFiles(files);
+    setImagePreviews(files.map((f) => URL.createObjectURL(f)));
+  }
+
+  function removeImage(index: number) {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -58,13 +89,14 @@ export default function AdminBlogPage() {
     fd.append("author", author); fd.append("readingTime", String(readingTime));
     fd.append("tags", JSON.stringify(tags)); fd.append("featured", String(featured));
     if (coverFile) fd.append("cover", coverFile);
+    imageFiles.forEach((f, i) => fd.append(`image-${i}`, f));
     try {
       const res = await fetch("/api/blog/create", { method: "POST", body: fd });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Error");
       setStatus("success"); setMessage(`Published! View at /blog/${data.slug}`);
       setTitle(""); setExcerpt(""); setContent(""); setTags([]); setFeatured(false);
-      setCoverFile(null); setCoverPreview("");
+      setCoverFile(null); setCoverPreview(""); setImageFiles([]); setImagePreviews([]);
     } catch (err) {
       setStatus("error"); setMessage(err instanceof Error ? err.message : "Something went wrong.");
     }
@@ -72,7 +104,7 @@ export default function AdminBlogPage() {
 
   return (
     <div className="min-h-screen bg-[#F4F6F8]">
-      <Navbar />
+      {/* <Navbar /> */}
 
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="mb-7">
@@ -144,6 +176,40 @@ export default function AdminBlogPage() {
                 <button type="button" onClick={() => { setCoverFile(null); setCoverPreview(""); }}
                   className="mt-1.5 text-xs text-red-500 hover:underline">Remove image</button>
               )}
+            </Field>
+
+            <Field label="Additional Images (2-3 images)">
+              <label className="block cursor-pointer">
+                <div className={`relative border-2 border-dashed rounded-2xl p-5 text-center transition-colors
+                  ${imagePreviews.length > 0 ? "border-[#1BAA87]" : "border-gray-200 hover:border-[#1BAA87]"}`}>
+                  {imagePreviews.length > 0
+                    ? <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {imagePreviews.map((preview, idx) => (
+                          <div key={idx} className="relative group">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={preview} alt={`preview-${idx}`} className="w-full h-24 rounded-lg object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => removeImage(idx)}
+                              className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                              </svg>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    : <div className="py-5">
+                        <svg className="w-8 h-8 text-[#9CA3AF] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                        </svg>
+                        <p className="text-xs text-[#9CA3AF]">Click to add images (up to 3)</p>
+                      </div>
+                  }
+                  <input type="file" accept="image/*" multiple className="absolute inset-0 opacity-0 cursor-pointer" onChange={handleImages} />
+                </div>
+              </label>
+              <p className="mt-1.5 text-xs text-[#9CA3AF]">Tip: Use these images to break up your content and showcase key concepts visually.</p>
             </Field>
 
             <Field label="Excerpt" required>
