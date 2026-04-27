@@ -2,11 +2,10 @@
 // app/admin/login/page.tsx - Admin login page
 
 import { Suspense, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -23,6 +22,7 @@ function LoginForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
+        credentials: 'include', // Ensure cookies are sent
       });
 
       if (!res.ok) {
@@ -30,8 +30,11 @@ function LoginForm() {
         throw new Error(data.error || 'Invalid password');
       }
 
-      // Successfully authenticated
-      router.push(redirectUrl);
+      // Small delay to ensure cookie is set
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Successfully authenticated - redirect
+      window.location.href = redirectUrl;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
@@ -91,7 +94,7 @@ function LoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="min-h-screen bg-[#F6F6F6]">
+    <div className="min-h-screen bg-[#F6F6F6] pt-24">
       <Navbar />
       <Suspense fallback={<div>Loading...</div>}>
         <LoginForm />

@@ -51,7 +51,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
             {/* Left Column - Feedback Form */}
             <FadeInOnScroll direction="left">
-              <div className="border border-none border-opacity-40 xl:mx-0 mx-3 rounded-3xl p-8 backdrop-blur-sm bg-[#17181C] bg-opacity-60">
+              <div className="border border-none border-opacity-40 ml-[-25px] xl:ml-[-40px] w-[96%] xl:mx-0 mx-3 rounded-3xl p-8 backdrop-blur-sm bg-[#17181C] bg-opacity-60">
                 <p className="text-[#0D9488] text-md font-medium uppercase tracking-wider mb-4">Feedback</p>
                 <h3 className="text-md font-medium text-[#ffffff7c] mb-6 leading-tight">
                   Seeking personalized support?{' '}

@@ -1,6 +1,6 @@
 export default function CTASection() {
   return (
-    <section className="bg-[#101010] py-20 px-4 md:px-8 text-center relative overflow-hidden w-full">
+    <section className="bg-[#101010] py-32 mt-[-32px] px-4 md:px-8 text-center relative overflow-hidden w-full">
       {/* Glow effect */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-teal-500 opacity-10 blur-3xl pointer-events-none"></div>
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-teal-400 opacity-20 blur-2xl pointer-events-none"></div>

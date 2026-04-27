@@ -4,7 +4,21 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { addPost, BlogPost, Tag } from "@/lib/blog";
 
+function verifyAdminAuth(req: NextRequest): boolean {
+  const cookieHeader = req.headers.get('cookie') || '';
+  const cookies = Object.fromEntries(
+    cookieHeader.split('; ').map((c) => {
+      const [key, val] = c.split('=');
+      return [key, val];
+    })
+  );
+  return cookies['admin-auth'] === 'true';
+}
+
 export async function POST(req: NextRequest) {
+  if (!verifyAdminAuth(req)) {
+    return NextResponse.json({ error: 'Unauthorized: Admin authentication required' }, { status: 401 });
+  }
   try {
     const fd = await req.formData();
 
@@ -22,8 +36,10 @@ export async function POST(req: NextRequest) {
 
     const slug = title
       .toLowerCase()
+      .trim()
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-")
+      .replace(/^-+|-+$/g, "")
       .slice(0, 80);
 
     // Handle cover image

@@ -5,15 +5,17 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FadeInOnScroll from "@/components/FadeInOnScroll";
 import ShareButtons from "@/components/blog/ShareButtons";
+import ImageWithFallback from "@/components/ImageWithFallback";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 const PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='480' viewBox='0 0 800 480'%3E%3Crect width='800' height='480' fill='%23EAF6F2'/%3E%3Ccircle cx='400' cy='200' r='60' fill='%231BAA87' opacity='.25'/%3E%3Crect x='300' y='280' width='200' height='20' rx='4' fill='%231BAA87' opacity='.2'/%3E%3Crect x='340' y='314' width='120' height='14' rx='4' fill='%231BAA87' opacity='.15'/%3E%3C/svg%3E";
 
 export async function generateMetadata({ params }: Props) {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(decodeURIComponent(slug));
   if (!post) {
     return { title: "Post not found" };
   }
@@ -34,12 +36,13 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(decodeURIComponent(slug));
   const allPosts = await getAllPosts();
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-[#F6F6F6]">
+      <div className="max-h-screen bg-[#F6F6F6]">
         <Navbar />
         <main className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
@@ -65,12 +68,12 @@ export default async function BlogPostPage({ params }: Props) {
     .slice(0, 3);
 
   return (
-    <div className="bg-[#F6F6F6] min-h-screen">
+    <div className="bg-[#F6F6F6] max-h-screen">
       <Navbar />
 
       <main className="pt-24 pb-20">
         {/* Hero Section with Cover */}
-        <section className="relative w-full overflow-hidden bg-white">
+        <section className="relative w-full overflow-hidden bg-white ">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Text Content */}
@@ -103,12 +106,11 @@ export default async function BlogPostPage({ params }: Props) {
 
               {/* Cover Image */}
               <div className="relative h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden shadow-lg bg-[#EAF6F2]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <ImageWithFallback
                   src={post.coverImage}
                   alt={post.title}
                   className="w-full h-full object-cover"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER; }}
+                  fallback={PLACEHOLDER}
                 />
               </div>
             </div>
@@ -144,12 +146,11 @@ export default async function BlogPostPage({ params }: Props) {
                         key={idx}
                         className="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow bg-[#EAF6F2]"
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <ImageWithFallback
                           src={img}
                           alt={`${post.title} visual ${idx + 1}`}
                           className="w-full h-64 sm:h-72 object-cover group-hover:scale-105 transition-transform duration-300"
-                          onError={(e) => { (e.currentTarget as HTMLImageElement).src = PLACEHOLDER; }}
+                          fallback={PLACEHOLDER}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
@@ -187,7 +188,7 @@ export default async function BlogPostPage({ params }: Props) {
             <aside className="lg:col-span-1">
               {/* Post Meta */}
               <div className="sticky top-24 space-y-8">
-                <ShareButtons slug={post.slug} title={post.title} />
+                {/* <ShareButtons slug={post.slug} title={post.title} /> */}
 
                 {/* Related Posts */}
                 {relatedPosts.length > 0 && (

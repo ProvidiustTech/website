@@ -2,7 +2,6 @@
 // app/admin/blog/page.tsx — Admin: publish a new blog post
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 
@@ -25,8 +24,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
 }
 
 export default function AdminBlogPage() {
-  const router = useRouter();
-  const { authenticated, loading: authLoading } = useAdminAuth();
+  const { authenticated, loading: authLoading, logout } = useAdminAuth();
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
@@ -104,11 +102,18 @@ export default function AdminBlogPage() {
 
   return (
     <div className="min-h-screen bg-[#F4F6F8]">
-      {/* <Navbar /> */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+          <div>
+            <span className="text-xs font-semibold bg-[#E6F7F4] text-[#1BAA87] px-3 py-1 rounded-full">Admin</span>
+            <p className="text-sm text-[#6B7280] mt-1">Session will auto-logout after 10 mins of inactivity</p>
+          </div>
+          <button onClick={logout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Logout</button>
+        </div>
+      </div>
 
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="mb-7">
-          <span className="inline-block text-xs font-semibold bg-[#E6F7F4] text-[#1BAA87] px-3 py-1 rounded-full mb-3">Admin</span>
           <h1 className="text-2xl font-bold text-[#1A1F2E]">Create New Blog Post</h1>
           <p className="text-sm text-[#6B7280] mt-1">Posts go live immediately after publishing.</p>
         </div>

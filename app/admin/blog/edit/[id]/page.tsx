@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { BlogPost } from "@/lib/blog";
 
 const ALL_TAGS = ["E-commerce", "Enterprise AI", "Sales", "Automation", "Customer Support"] as const;
@@ -27,6 +28,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
 export default function EditBlogPage() {
   const router = useRouter();
   const params = useParams();
+  const { authenticated, loading: authLoading, logout } = useAdminAuth();
   const id = params.id as string;
 
   const [post, setPost] = useState<BlogPost | null>(null);
@@ -129,30 +131,45 @@ export default function EditBlogPage() {
     }
   }
 
-  if (loading) {
+  if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#F4F6F8]">
-        <Navbar />
-        <div className="flex items-center justify-center min-h-[70vh]">
-          <p className="text-[#6B7280]">Loading post...</p>
+      <div className="min-h-screen bg-[#F4F6F8] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1BAA87] border-t-transparent mx-auto mb-4"></div>
+          <p className="text-[#6B7280]">Loading...</p>
         </div>
       </div>
     );
   }
 
+  if (!authenticated) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-[#F4F6F8]">
-      <Navbar />
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+          <div>
+            <span className="text-xs font-semibold bg-[#E6F7F4] text-[#1BAA87] px-3 py-1 rounded-full">Admin</span>
+            <p className="text-sm text-[#6B7280] mt-1">Edit Blog Post</p>
+          </div>
+          <button onClick={logout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Logout</button>
+        </div>
+      </div>
 
       <div className="max-w-2xl mx-auto px-4 py-12">
-        <div className="mb-7">
-          <span className="inline-block text-xs font-semibold bg-[#E6F7F4] text-[#1BAA87] px-3 py-1 rounded-full mb-3">Admin</span>
-          <h1 className="text-2xl font-bold text-[#1A1F2E]">Edit Blog Post</h1>
-          <p className="text-sm text-[#6B7280] mt-1">Update this blog post and save changes.</p>
-        </div>
-
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        {loading ? (
+          <div className="flex items-center justify-center min-h-[70vh]">
+            <p className="text-[#6B7280]">Loading post...</p>
+          </div>
+        ) : (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
+            <div className="mb-7">
+              <h1 className="text-2xl font-bold text-[#1A1F2E]\">Edit Blog Post</h1>
+              <p className="text-sm text-[#6B7280] mt-1\">Update this blog post and save changes.</p>
+            </div>
+            <form onSubmit={handleSubmit} className="space-y-6\">
             <Field label="Post Title" required>
               <input
                 type="text"
@@ -329,7 +346,8 @@ export default function EditBlogPage() {
               </button>
             </div>
           </form>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

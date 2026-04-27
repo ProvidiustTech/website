@@ -4,21 +4,32 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { getPostBySlug, updatePost, deletePost, BlogPost } from "@/lib/blog";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+function verifyAdminAuth(req: NextRequest): boolean {
+  const cookieHeader = req.headers.get('cookie') || '';
+  const cookies = Object.fromEntries(
+    cookieHeader.split('; ').map((c) => {
+      const [key, val] = c.split('=');
+      return [key, val];
+    })
+  );
+  return cookies['admin-auth'] === 'true';
+}
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    // ID can be numeric or slug
-    const idOrSlug = params.id;
+    // Resolve params promise for Next.js 16+
+    const { id } = await params;
     
     // Try to fetch by ID first if it's numeric
-    if (/^\d+$/.test(idOrSlug)) {
+    if (/^\d+$/.test(id)) {
       // For now, slug-based lookup. In production, you might want numeric ID lookup
       const posts = await import("@/lib/blog").then(m => m.getAllPosts());
-      const post = posts.find(p => p.id?.toString() === idOrSlug);
+      const post = posts.find(p => p.id?.toString() === id);
       if (post) return NextResponse.json(post, { status: 200 });
     }
     
     // Otherwise try slug
-    const post = await getPostBySlug(idOrSlug);
+    const post = await getPostBySlug(id);
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
@@ -30,9 +41,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  if (!verifyAdminAuth(req)) {
+    return NextResponse.json({ error: 'Unauthorized: Admin authentication required' }, { status: 401 });
+  }
   try {
-    const id = parseInt(params.id, 10);
+    const { id: idStr } = await params;
+    const id = parseInt(idStr, 10);
     const fd = await req.formData();
 
     const title = fd.get("title") as string;
@@ -101,9 +116,10 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const id = parseInt(params.id, 10);
+    const { id: idStr } = await params;
+    const id = parseInt(idStr, 10);
     const success = await deletePost(id);
     
     if (!success) {

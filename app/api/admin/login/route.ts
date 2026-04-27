@@ -1,6 +1,6 @@
 // app/api/admin/login/route.ts - Admin login API endpoint
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminPassword, setAdminAuthCookie } from '@/lib/admin-auth';
+import { verifyAdminPassword } from '@/lib/admin-auth';
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,11 +24,11 @@ export async function POST(req: NextRequest) {
 
     // Create response with auth cookie
     const response = NextResponse.json(
-      { message: 'Authenticated successfully' },
+      { message: 'Authenticated successfully', success: true },
       { status: 200 }
     );
 
-    // Set the authentication cookie
+    // Set the authentication cookie - use root path for broader access
     response.cookies.set({
       name: 'admin-auth',
       value: 'true',
@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: '/admin',
+      path: '/', // Root path so it's accessible everywhere
     });
 
     return response;

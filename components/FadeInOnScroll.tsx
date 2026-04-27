@@ -32,7 +32,7 @@ export default function FadeInOnScroll({
       className={`transition-all duration-700 ${
         isVisible
           ? 'opacity-100 translate-y-0 translate-x-0'
-          : `opacity-0 ${directionClasses[direction]}`
+          : `opacity-1 ${directionClasses[direction]}`
       } ${className}`}
       style={{
         transitionDelay: isVisible ? `${delay}ms` : '0ms',

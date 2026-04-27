@@ -22,7 +22,7 @@ export default function FAQSection() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <section className="bg-[#000000] py-16 px-7 md:px-8 w-full overflow-hidden">
+    <section className="bg-[#000000] py-16 px-7 ml-8 md:px-8 w-full overflow-hidden">
       {/* Badge */}
       <div className="flex justify-center mb-8">
         <div className="inline-flex items-center gap-2 bg-[#1f2937] border border-[#374151] rounded-full px-4 py-2">

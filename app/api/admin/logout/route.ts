@@ -13,7 +13,7 @@ export async function POST() {
     value: '',
     httpOnly: true,
     maxAge: 0,
-    path: '/admin',
+    path: '/', // Root path to match login
   });
 
   return response;

@@ -11,7 +11,7 @@ import FadeInOnScroll from "@/components/FadeInOnScroll";
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#f5f5f7] w-full overflow-hidden">
-      <div className="h-6" />
+      <div className="h-" />
       <Navbar />
       
       <FadeInOnScroll>

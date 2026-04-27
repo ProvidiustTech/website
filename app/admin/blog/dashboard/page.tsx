@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { BlogPost, formatDate } from "@/lib/blog";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
@@ -12,7 +11,6 @@ type SortField = "title" | "publishedAt" | "author";
 type SortOrder = "asc" | "desc";
 
 export default function AdminDashboard() {
-  const router = useRouter();
   const { authenticated, loading: authLoading, logout } = useAdminAuth();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([]);
@@ -24,20 +22,21 @@ export default function AdminDashboard() {
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-[#F6F6F6] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1BAA87] border-t-transparent mx-auto mb-4"></div>
-          <p className="text-[#6B7280]">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  
+  // if (authLoading) {
+  //   return (
+  //     <div className="min-h-screen bg-[#F6F6F6] flex items-center justify-center">
+  //       <div className="text-center">
+  //         <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1BAA87] border-t-transparent mx-auto mb-4"></div>
+  //         <p className="text-[#6B7280]">Loading...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (!authenticated) {
-    return null; // Redirect happens in useAdminAuth
-  }
+  // if (!authenticated) {
+  //   return null; // Redirect happens in useAdminAuth
+  // }
 
   // Fetch all posts
   useEffect(() => {
@@ -57,6 +56,7 @@ export default function AdminDashboard() {
 
     fetchPosts();
   }, []);
+
 
   // Filter and sort posts
   useEffect(() => {
@@ -93,6 +93,35 @@ export default function AdminDashboard() {
 
     setFilteredPosts(results);
   }, [posts, searchTerm, sortField, sortOrder]);
+
+
+
+   if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#F6F6F6] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1BAA87] border-t-transparent mx-auto mb-4"></div>
+          <p className="text-[#6B7280]">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authenticated) {
+    return null;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F4F6F8]">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[70vh]">
+          <p className="text-[#6B7280]">Loading posts...</p>
+        </div>
+      </div>
+    );
+  }
+
 
   const handleDelete = async (id: number) => {
     try {
@@ -157,13 +186,20 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-[#F4F6F8]">
-      <Navbar />
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-[#1A1F2E]">Blog Management</h1>
+            <p className="text-sm text-[#6B7280] mt-0.5">Session expires after 10 mins of inactivity</p>
+          </div>
+          <button onClick={logout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Logout</button>
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-[#1A1F2E]">Blog Management</h1>
             <p className="text-sm text-[#6B7280] mt-1">Manage all your blog posts in one place</p>
           </div>
           <Link

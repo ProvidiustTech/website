@@ -184,7 +184,7 @@ export default function AutomateSection() {
 
 
   return (
-    <section className="bg-[#f5f5f7] py-16 px-4 md:px-8 xl:px-16 overflow-hidden">
+    <section className="bg-[#f5f5f7] ml-[-30px] w-[100%] py-16 px-4 md:px-8 xl:px-16 overflow-hidden">
       <div className="max-w-7xl mx-auto">
  
         {/* ── Section header ── */}
@@ -266,8 +266,8 @@ export default function AutomateSection() {
  
           {/* Right: your chat gif,unchanged */}
           <div className="md:w-1/2 w-full">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden max-w-sm mx-auto md:mx-0 md:ml-auto">
-              <img className="w-[full]" src="liveconversation.gif" alt="Live conversation demo" />
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden xl:max-w-3xl mx-auto md:mx-0 md:ml-auto">
+              <img className="w-[100%]" src="liveconversation.gif" alt="Live conversation demo" />
             </div>
           </div>
         </div>
