@@ -29,7 +29,7 @@ export default function EditBlogPage() {
   const router = useRouter();
   const params = useParams();
   const { authenticated, loading: authLoading, logout } = useAdminAuth();
-  const id = params.id as string;
+  const slug = params.slug as string; 
 
   const [post, setPost] = useState<BlogPost | null>(null);
   const [title, setTitle] = useState("");
@@ -51,7 +51,7 @@ export default function EditBlogPage() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`/api/blog/${id}`);
+        const res = await fetch(`/api/blog/${slug}`);
         if (!res.ok) throw new Error("Failed to load post");
         const data = await res.json();
         setPost(data);
@@ -73,7 +73,7 @@ export default function EditBlogPage() {
     };
 
     fetchPost();
-  }, [id]);
+  }, [slug]);
 
   function toggleTag(t: Tag) {
     setTags((prev) => prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]);
@@ -118,7 +118,7 @@ export default function EditBlogPage() {
     imageFiles.forEach((f, i) => fd.append(`image-${i}`, f));
 
     try {
-      const res = await fetch(`/api/blog/${id}`, { method: "PUT", body: fd });
+      const res = await fetch(`/api/blog/${slug}`, { method: "PUT", body: fd });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Error");
       
@@ -165,11 +165,11 @@ export default function EditBlogPage() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-7">
-            <div className="mb-7">
-              <h1 className="text-2xl font-bold text-[#1A1F2E]\">Edit Blog Post</h1>
-              <p className="text-sm text-[#6B7280] mt-1\">Update this blog post and save changes.</p>
+            <div className="mb-8">
+              <h1 className="text-2xl font-bold text-[#1A1F2E]">Edit Blog Post</h1>
+              <p className="text-sm text-[#6B7280] mt-1">Update this blog post and save changes.</p>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-6\">
+            <form onSubmit={handleSubmit} className="space-y-6">
             <Field label="Post Title" required>
               <input
                 type="text"

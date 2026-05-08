@@ -184,7 +184,7 @@ export default function AutomateSection() {
 
 
   return (
-    <section className="bg-[#f5f5f7] ml-[-30px] w-[100%] py-16 px-4 md:px-8 xl:px-16 overflow-hidden">
+    <section className="bg-[#f5f5f7] w-[100%] py-16 px-4 md:px-8 xl:px-16 overflow-hidden">
       <div className="max-w-7xl mx-auto">
  
         {/* ── Section header ── */}

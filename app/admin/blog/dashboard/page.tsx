@@ -18,25 +18,9 @@ export default function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState<SortField>("publishedAt");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
-  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
-  const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
+  const [selectedSlugs, setSelectedSlugs] = useState<Set<string>>(new Set());
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-
-  
-  // if (authLoading) {
-  //   return (
-  //     <div className="min-h-screen bg-[#F6F6F6] flex items-center justify-center">
-  //       <div className="text-center">
-  //         <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#1BAA87] border-t-transparent mx-auto mb-4"></div>
-  //         <p className="text-[#6B7280]">Loading...</p>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
-  // if (!authenticated) {
-  //   return null; // Redirect happens in useAdminAuth
-  // }
 
   // Fetch all posts
   useEffect(() => {
@@ -44,8 +28,9 @@ export default function AdminDashboard() {
       try {
         const res = await fetch("/api/blog");
         const data = await res.json();
-        setPosts(data);
-        setFilteredPosts(data);
+        const postsArray = Array.isArray(data) ? data : (data.posts || []);
+        setPosts(postsArray);
+        setFilteredPosts(postsArray);
       } catch (err) {
         console.error("Failed to fetch posts:", err);
         setMessage({ type: "error", text: "Failed to load posts" });
@@ -123,12 +108,12 @@ export default function AdminDashboard() {
   }
 
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (slug: string) => {
     try {
-      const res = await fetch(`/api/blog/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/blog/${slug}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Failed to delete");
       
-      setPosts((prev) => prev.filter((p) => p.id !== id));
+      setPosts((prev) => prev.filter((p) => p.slug !== slug));
       setMessage({ type: "success", text: "Post deleted successfully" });
       setDeleteConfirm(null);
     } catch (err) {
@@ -137,51 +122,39 @@ export default function AdminDashboard() {
   };
 
   const handleBulkDelete = async () => {
-    if (selectedIds.size === 0) return;
+    if (selectedSlugs.size === 0) return;
     
     try {
       await Promise.all(
-        Array.from(selectedIds).map((id) =>
-          fetch(`/api/blog/${id}`, { method: "DELETE" })
+        Array.from(selectedSlugs).map((slug) =>
+          fetch(`/api/blog/${slug}`, { method: "DELETE" })
         )
       );
       
-      setPosts((prev) => prev.filter((p) => p.id && !selectedIds.has(p.id)));
-      setSelectedIds(new Set());
-      setMessage({ type: "success", text: `Deleted ${selectedIds.size} posts` });
+      setPosts((prev) => prev.filter((p) => !selectedSlugs.has(p.slug)));
+      setSelectedSlugs(new Set());
+      setMessage({ type: "success", text: `Deleted ${selectedSlugs.size} posts` });
     } catch (err) {
       setMessage({ type: "error", text: "Failed to delete some posts" });
     }
   };
 
   const toggleSelectAll = (checked: boolean) => {
-    // if (checked) {
-    //   setSelectedIds(new Set(filteredPosts.compactMap((p) => p.id)));
-    // } else {
-    //   setSelectedIds(new Set());
-    // }
-  };
-
-  const toggleSelect = (id: number | undefined, checked: boolean) => {
-    if (!id) return;
-    const newSet = new Set(selectedIds);
     if (checked) {
-      newSet.add(id);
+      setSelectedSlugs(new Set(filteredPosts.map((p) => p.slug)));
     } else {
-      newSet.delete(id);
+      setSelectedSlugs(new Set());
     }
-    setSelectedIds(newSet);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#F4F6F8]">
-        <Navbar />
-        <div className="flex items-center justify-center min-h-[70vh]">
-          <p className="text-[#6B7280]">Loading posts...</p>
-        </div>
-      </div>
-    );
+  const toggleSelect = (slug: string, checked: boolean) => {
+    const newSet = new Set(selectedSlugs);
+    if (checked) {
+      newSet.add(slug);
+    } else {
+      newSet.delete(slug);
+    }
+    setSelectedSlugs(newSet);
   }
 
   return (
@@ -271,12 +244,12 @@ export default function AdminDashboard() {
             </div>
 
             {/* Delete Selected */}
-            {selectedIds.size > 0 && (
+            {selectedSlugs.size > 0 && (
               <button
                 onClick={handleBulkDelete}
                 className="px-4 py-2 bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 rounded-lg text-sm font-medium transition-colors"
               >
-                Delete {selectedIds.size} selected
+                Delete {selectedSlugs.size} selected
               </button>
             )}
           </div>
@@ -290,7 +263,7 @@ export default function AdminDashboard() {
                 <th className="px-4 sm:px-6 py-4 text-left">
                   <input
                     type="checkbox"
-                    checked={selectedIds.size > 0 && selectedIds.size === filteredPosts.length}
+                    checked={selectedSlugs.size > 0 && selectedSlugs.size === filteredPosts.length}
                     onChange={(e) => toggleSelectAll(e.target.checked)}
                     className="w-4 h-4 rounded border-gray-300 text-[#1BAA87] cursor-pointer"
                   />
@@ -310,12 +283,12 @@ export default function AdminDashboard() {
                 </tr>
               ) : (
                 filteredPosts.map((post) => (
-                  <tr key={post.id} className="hover:bg-[#F9FAFB] transition-colors">
+                  <tr key={post.slug} className="hover:bg-[#F9FAFB] transition-colors">
                     <td className="px-4 sm:px-6 py-4">
                       <input
                         type="checkbox"
-                        checked={post.id ? selectedIds.has(post.id) : false}
-                        onChange={(e) => toggleSelect(post.id, e.target.checked)}
+                        checked={selectedSlugs.has(post.slug)}
+                        onChange={(e) => toggleSelect(post.slug, e.target.checked)}
                         className="w-4 h-4 rounded border-gray-300 text-[#1BAA87] cursor-pointer"
                       />
                     </td>
@@ -342,13 +315,13 @@ export default function AdminDashboard() {
                     <td className="px-4 sm:px-6 py-4">
                       <div className="flex items-center gap-2">
                         <Link
-                          href={`/admin/blog/edit/${post.id}`}
+                          href={`/admin/blog/edit/${post.slug}`}
                           className="px-3 py-1.5 text-xs font-medium bg-[#E6F7F4] text-[#1BAA87] hover:bg-[#1BAA87] hover:text-white rounded transition-colors"
                         >
                           Edit
                         </Link>
                         <button
-                          onClick={() => setDeleteConfirm(post.id || null)}
+                          onClick={() => setDeleteConfirm(post.slug)}
                           className="px-3 py-1.5 text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 rounded transition-colors"
                         >
                           Delete
@@ -382,7 +355,7 @@ export default function AdminDashboard() {
                 Cancel
               </button>
               <button
-                onClick={() => handleDelete(deleteConfirm)}
+                onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
                 className="px-4 py-2 text-sm font-medium bg-red-600 text-white hover:bg-red-700 rounded-lg transition-colors"
               >
                 Delete

@@ -52,7 +52,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Functional routes
-  const functionalRoutes = ['/', '/founding', '/admin', '/blog'];
+  const functionalRoutes = ['/', '/founding', '/admin', '/blog', '/pricing', '/product'];
   const isFunctionalRoute = functionalRoutes.some(route => {
     if (pathname === route) return true;
     if (pathname.startsWith(route + '/')) return true;
