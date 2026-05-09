@@ -1,34 +1,15 @@
 // app/api/blog/route.ts
-import { list } from "@vercel/blob";
 import { NextResponse } from "next/server";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+import { normalize } from "@/lib/blog-normalize";
 
 export async function GET() {
-  try {
-    const { blobs } = await list({ prefix: "posts/" });
+  const { data, error } = await supabaseAdmin
+    .from("posts")
+    .select("*")
+    .order("published_at", { ascending: false });
 
-    // Filter to only .json files (ignore folder placeholders)
-    const jsonBlobs = blobs.filter((b) => b.pathname.endsWith(".json"));
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-    const posts = await Promise.all(
-      jsonBlobs.map(async (blob) => {
-        const res = await fetch(blob.url);
-        if (!res.ok) return null;
-        return res.json();
-      })
-    );
-
-    // Strip nulls from any failed fetches
-    const valid = posts.filter(Boolean);
-
-    // Sort newest first
-    valid.sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-    );
-
-    return NextResponse.json(valid);
-  } catch (err) {
-    console.error("[api/blog GET]", err);
-    return NextResponse.json({ error: "Failed to load posts" }, { status: 500 });
-  }
+  return NextResponse.json((data ?? []).map(normalize));
 }

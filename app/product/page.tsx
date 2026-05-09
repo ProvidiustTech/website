@@ -3,6 +3,8 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FadeInOnScroll from "@/components/FadeInOnScroll";
+import CTASection from "@/components/CTASection";
+
 
 export const metadata: Metadata = {
   title: "Product | ProvidiusTech",
@@ -267,27 +269,12 @@ export default function ProductPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-[#22242A] pb-24 px-4">
-        <FadeInOnScroll>
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-400 to-blue-500 mx-auto mb-8 flex items-center justify-center shadow-xl shadow-teal-500/30">
-              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
-              Let your AI handle the conversations
-            </h2>
-            <Link href="/founding">
-              <button className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-4 rounded-2xl text-base font-semibold transition-colors mt-4">
-                Get Started
-              </button>
-            </Link>
-          </div>
-        </FadeInOnScroll>
-      </section>
-
-      <Footer />
+  <FadeInOnScroll delay={100}>
+        <CTASection />
+      </FadeInOnScroll>
+      <FadeInOnScroll>
+        <Footer />
+      </FadeInOnScroll>
     </main>
   );
 }

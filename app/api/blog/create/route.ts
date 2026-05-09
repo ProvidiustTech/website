@@ -1,96 +1,70 @@
 // app/api/blog/create/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
-// import { addPost } from "@/lib/blog"; // You can likely remove this if addPost was using fs
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
-function verifyAdminAuth(req: NextRequest): boolean {
-  const cookieHeader = req.headers.get('cookie') || '';
-  const cookies = Object.fromEntries(
-    cookieHeader.split('; ').map((c) => {
-      const [key, val] = c.split('=');
-      return [key, val?.split(';')[0]];
-    })
-  );
-  return cookies['admin-auth'] === 'true';
+async function uploadToStorage(file: File, path: string): Promise<string> {
+  const { error } = await supabaseAdmin.storage
+    .from("blog-media")
+    .upload(path, file, { upsert: true });
+
+  if (error) throw new Error(`Upload failed: ${error.message}`);
+
+  const { data } = supabaseAdmin.storage.from("blog-media").getPublicUrl(path);
+  return data.publicUrl;
 }
 
 export async function POST(req: NextRequest) {
-  if (!verifyAdminAuth(req)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
   try {
     const fd = await req.formData();
+
     const title = fd.get("title") as string;
-    const excerpt = fd.get("excerpt") as string;
-    const content = fd.get("content") as string;
-    const author = (fd.get("author") as string) ?? "ProvidIusTech Media";
-    const readingTime = Number(fd.get("readingTime") ?? 4);
-    const featured = fd.get("featured") === "true";
-    const tags = JSON.parse((fd.get("tags") as string) ?? "[]");
+    const slug =
+      (fd.get("slug") as string) ||
+      title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
 
-    const slug = title
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .slice(0, 80);
-
-    // 1. Process Cover Image
-    let coverImage = "/blog-images/placeholder.jpg";
+    // Upload cover
     const coverFile = fd.get("cover") as File | null;
-    if (coverFile && coverFile.size > 0) {
-      const blob = await put(`blog/${slug}-cover`, coverFile, {
-        access: 'public',
-        addRandomSuffix: true,
-      });
-      coverImage = blob.url;
+    if (!coverFile || coverFile.size === 0) {
+      return NextResponse.json({ error: "Cover image is required" }, { status: 400 });
     }
+    const ext = coverFile.name.split(".").pop();
+    const coverImage = await uploadToStorage(
+      coverFile,
+      `covers/${slug}-${Date.now()}.${ext}`
+    );
 
-    // 2. Process Additional Images
+    // Upload additional images
     const images: string[] = [];
     for (let i = 0; i < 3; i++) {
-      const imageFile = fd.get(`image-${i}`) as File | null;
-      if (imageFile && imageFile.size > 0) {
-        const blob = await put(`blog/${slug}-img-${i + 1}`, imageFile, {
-          access: 'public',
-          addRandomSuffix: true,
-        });
-        images.push(blob.url);
-      }
+      const f = fd.get(`image-${i}`) as File | null;
+      if (!f || f.size === 0) continue;
+      const imgExt = f.name.split(".").pop();
+      const url = await uploadToStorage(f, `images/${slug}-${i}-${Date.now()}.${imgExt}`);
+      images.push(url);
     }
 
-    // 3. Create the Post Object
-    const post = {
+    const { error } = await supabaseAdmin.from("posts").insert({
       slug,
       title,
-      excerpt,
-      content,
-      author,
-      readingTime,
-      featured,
-      tags,
-      coverImage,
+      excerpt:      fd.get("excerpt") as string,
+      content:      fd.get("content") as string,
+      author:       fd.get("author") as string,
+      reading_time: Number(fd.get("readingTime")),
+      tags:         JSON.parse((fd.get("tags") as string) || "[]"),
+      featured:     fd.get("featured") === "true",
+      cover_image:  coverImage,
       images,
-      publishedAt: new Date().toISOString(),
-    };
-
-    // 4. THE MAGIC STEP: Save the post as a JSON file in Vercel Blob
-    // This replaces your "addPost" function and acts as your database.
-    const postData = JSON.stringify(post);
-    const blogJsonBlob = await put(`posts/${slug}.json`, postData, {
-      access: 'public',
-      contentType: 'application/json',
+      published_at: (fd.get("publishedAt") as string) || new Date().toISOString(),
     });
 
-    return NextResponse.json({ 
-        slug, 
-        url: blogJsonBlob.url, // This is the permanent link to your blog data
-        message: "Published successfully to Vercel Blob!" 
-    }, { status: 201 });
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+    return NextResponse.json({ slug });
   } catch (err) {
-    console.error("[blog/create]", err);
-    return NextResponse.json({ error: "Internal server error." }, { status: 500 });
+    const msg = err instanceof Error ? err.message : "Unknown error";
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

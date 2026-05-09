@@ -1,10 +1,10 @@
-// app/blog/page.tsx — Blog listing / index page
+// app/blog/page.tsx
 import BlogCard from "@/components/blog/BlogCard";
 import CTASection from "@/components/CTASection";
 import FadeInOnScroll from "@/components/FadeInOnScroll";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { getAllPostsFromBlob } from "./[slug]/page";
+import { getAllPosts, getFeaturedPost } from "@/lib/blog";
 
 export const metadata = {
   title: "Blog | ProvidIusTech",
@@ -12,23 +12,18 @@ export const metadata = {
 };
 
 export default async function BlogPage() {
-  const posts = await getAllPostsFromBlob();
+  const [featured, allPosts] = await Promise.all([
+    getFeaturedPost(),
+    getAllPosts(),
+  ]);
 
-  const sortedPosts = posts.sort(
-    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
-
-  // 4. Split into featured + grid
-  const featured = sortedPosts.find((p) => p.featured) ?? sortedPosts[0] ?? null;
-  const gridPosts = featured
-    ? sortedPosts.filter((p) => p.slug !== featured.slug)
-    : sortedPosts;
+  const gridPosts = allPosts.filter((p) => p.slug !== featured?.slug);
 
   return (
     <div className="bg-[#F6F6F6] overflow-y-hidden">
       <Navbar />
       <main className="min-h-screen bg-[#F6F6F6] mb-20 pt-32 w-[88%] max-w-8xl mx-auto">
-        {/* ── Hero banner ─────────────────────────────────.────────────────── */}
+        {/* ── Hero banner ─────────────────────────────────────────────────── */}
         <section className="bg-gradient-to-b rounded-3xl shadow-sm from-[#14b8a558] to-[#dbebf3] py-16 px-4 text-center">
           <span className="inline-flex items-center gap-2 text-xs xl:text-sm xl:mt-3 font-medium text-gray-600 bg-white rounded-full px-4 py-1.5 mb-6 shadow-sm">
             <img src="/check1.png" className="w-7 xl:w-10" alt="" />
@@ -55,7 +50,6 @@ export default async function BlogPage() {
             </section>
           )}
 
-          {/* Grid Posts */}
           {gridPosts.length > 0 && (
             <section>
               <div className="mb-8">
@@ -70,7 +64,7 @@ export default async function BlogPage() {
           )}
 
           {/* Empty State */}
-          {sortedPosts.length === 0 && (
+          {allPosts.length === 0 && (
             <div className="text-center py-20">
               <h3 className="text-2xl font-bold text-[#1A1F2E] mb-2">No posts yet</h3>
               <p className="text-[#6B7280] text-lg">Check back soon for our latest insights and updates.</p>
