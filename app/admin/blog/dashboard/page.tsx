@@ -105,7 +105,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F6F8] flex items-center justify-center min-h-[70vh]">
+      <div className=" bg-[#F4F6F8] flex items-center justify-center min-h-[70vh]">
         <p className="text-[#6B7280]">Loading posts...</p>
       </div>
     );
