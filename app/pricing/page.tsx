@@ -3,6 +3,8 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FadeInOnScroll from "@/components/FadeInOnScroll";
+import CTASection from "@/components/CTASection";
+import FAQSection from "@/components/FAQSection";
 
 export const metadata: Metadata = {
   title: "Plans & Access | ProvidiusTech",
@@ -87,186 +89,111 @@ export default function PricingPage() {
     <main className="min-h-screen bg-[#f5f5f7] overflow-hidden">
       <Navbar />
 
-      {/* Hero */}
-      <section className="pt-36 md:pt-44 pb-20 px-4 text-center">
-        <FadeInOnScroll>
-          <span className="inline-block bg-white text-teal-600 text-sm font-medium px-4 py-1.5 rounded-full shadow-sm mb-6">
-            Built for Early Businesses. No surprise fees.
-          </span>
-          <h1 className="text-4xl md:text-6xl font-black text-[#1E293B] leading-tight max-w-4xl mx-auto mb-5">
-            Flexible Plans for Every Stage
-            <br />
-            of <span className="text-teal-500">Customer Support</span>
-          </h1>
-          <p className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto">
-            From early access to tailored AI customer care deployments, Providius offers flexible
-            ways for businesses to automate conversations, streamline support, and scale across
-            multiple channels.
-          </p>
-        </FadeInOnScroll>
-      </section>
 
-      {/* Plans Grid */}
-      <section className="px-4 md:px-8 pb-28 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          {plans.map((plan, i) => (
-            <FadeInOnScroll key={plan.id} direction="up" delay={i * 80}>
-              <div
-                className={`relative rounded-3xl p-8 flex flex-col h-full transition-shadow ${
-                  plan.featured
-                    ? "bg-gradient-to-b from-teal-600 to-teal-700 text-white shadow-2xl shadow-teal-500/30 scale-[1.02] md:scale-105"
-                    : "bg-white text-[#1E293B] shadow-sm"
-                }`}
-              >
-                {plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="bg-blue-500 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-md">
-                      {plan.badge}
-                    </span>
-                  </div>
-                )}
 
-                {/* Icon */}
+
+      <div className=" max-w-8xl w-[88%] mx-auto">
+        <section className="mt-36 mb-32 items-center flex justify-center md:pt-10 pb-20 bg-gradient-to-b rounded-3xl shadow-sm from-[#14b8a558] to-[#dbebf3] py-20 xl:py-20 px-4 text-center">
+          <FadeInOnScroll>
+            <span className="inline-flex items-center gap-2 text-xs xl:text-sm xl:mt-3 font-medium text-gray-600 bg-white rounded-full px-4 py-1.5 mb-6 shadow-sm">
+              <img src="/check1.png" className="w-7 xl:w-10" alt="" />
+              Built for Early Businesses. No surprise fees.
+            </span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl mt-8 font-bold text-[#1A1F2E] mb-4 leading-tight">
+              Flexible Plans for Every Stage
+              <br />
+              of <span className="text-teal-500">Customer Support</span>
+            </h1>
+            <p className="text-[#6B7280] max-w-4xl mx-auto text-base sm:text-lg">
+              From early access to tailored AI customer care deployments, Providius offers flexible ways for businesses to automate conversations, streamline support, and scale across multiple channels.
+            </p>
+          </FadeInOnScroll>
+        </section>
+
+        {/* Hero */}
+
+        {/* Plans Grid */}
+        <section className="px-4 mb-20 md:px-8 pb-28 max-w-7xl mt-0 xl:py-10 mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {plans.map((plan, i) => (
+              <FadeInOnScroll key={plan.id} direction="up" delay={i * 80}>
                 <div
-                  className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 ${
-                    plan.featured ? "bg-white/20" : "bg-teal-50"
-                  }`}
-                >
-                  <PlanIcon id={plan.id} featured={plan.featured} />
-                </div>
-
-                <h3
-                  className={`text-xl font-black mb-1 ${
-                    plan.featured ? "text-white" : "text-[#1E293B]"
-                  }`}
-                >
-                  {plan.name}
-                </h3>
-                <p
-                  className={`text-sm mb-8 ${
-                    plan.featured ? "text-teal-100" : "text-gray-500"
-                  }`}
-                >
-                  {plan.tagline}
-                </p>
-
-                <Link href={plan.ctaHref} className="block mb-8">
-                  <button
-                    className={`w-full py-3 rounded-xl font-semibold text-sm transition-all cursor-pointer ${
-                      plan.ctaStyle === "primary"
-                        ? "bg-white text-teal-700 hover:bg-teal-50"
-                        : plan.ctaStyle === "secondary"
-                        ? "bg-teal-500 text-white hover:bg-teal-600"
-                        : "border-2 border-teal-500 text-teal-600 hover:bg-teal-50"
+                  className={`relative rounded-3xl p-8 flex flex-col h-full transition-shadow ${plan.featured
+                      ? "bg-white text-[#1E293B]"
+                      : "bg-white text-[#1E293B] shadow-sm"
                     }`}
-                  >
-                    {plan.cta}
-                  </button>
-                </Link>
+                >
+                  {plan.badge && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <span className="bg-blue-500 text-white text-xs font-semibold px-4 py-1.5 rounded-full shadow-md">
+                        {plan.badge}
+                      </span>
+                    </div>
+                  )}
 
-                <ul className="space-y-3 mt-auto">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm">
-                      <svg
-                        className={`w-4 h-4 mt-0.5 shrink-0 ${
-                          plan.featured ? "text-teal-200" : "text-teal-500"
+                  {/* Icon */}
+                  <div
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 ${plan.featured ? "bg-white/20" : "bg-teal-50"
+                      }`}
+                  >
+                    <PlanIcon id={plan.id} featured={plan.featured} />
+                  </div>
+
+                  <h3
+                    className={`xl:text-3xl text-base font-semibold mb-1 ${plan.featured ? "text-[#1E293B]" : "text-[#1E293B]"
+                      }`}
+                  >
+                    {plan.name}
+                  </h3>
+                  <p
+                    className={`text-base mb-8 ${plan.featured ? "text-gray-500" : "text-gray-500"
+                      }`}
+                  >
+                    {plan.tagline}
+                  </p>
+
+                  <Link href={plan.ctaHref} className="block mb-8">
+                    <button
+                      className={`w-full py-3 rounded-xl font-semibold text-sm xl:text-base transition-all cursor-pointer ${plan.ctaStyle === "primary"
+                          ? "bg-teal-500 text-white hover:bg-teal-600"
+                          : plan.ctaStyle === "primary"
+                            ? "bg-teal-500 text-white hover:bg-teal-600"
+                            : "border-2 border-teal-500 text-teal-600 hover:bg-teal-50"
                         }`}
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className={plan.featured ? "text-teal-50" : "text-gray-600"}>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </FadeInOnScroll>
-          ))}
-        </div>
-      </section>
+                    >
+                      {plan.cta}
+                    </button>
+                  </Link>
+
+                  <ul className="space-y-3 mt-auto">
+                    {plan.features.map((f) => (
+                      <li key={f} className="flex items-start gap-3 text-xs xl:text-md">
+                        <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M17.5 26.7675L11.25 20.5163L13.0163 18.75L17.5 23.2325L26.9812 13.75L28.75 15.5187L17.5 26.7675Z" fill="#14B8A6" />
+                          <path d="M20 2.5C16.5388 2.5 13.1554 3.52636 10.2775 5.44928C7.39967 7.37221 5.15665 10.1053 3.83212 13.303C2.50758 16.5007 2.16102 20.0194 2.83627 23.4141C3.51151 26.8087 5.17822 29.9269 7.62564 32.3744C10.0731 34.8218 13.1913 36.4885 16.5859 37.1637C19.9806 37.839 23.4993 37.4924 26.697 36.1679C29.8947 34.8434 32.6278 32.6003 34.5507 29.7225C36.4737 26.8446 37.5 23.4612 37.5 20C37.5 15.3587 35.6563 10.9075 32.3744 7.62563C29.0925 4.34374 24.6413 2.5 20 2.5ZM20 35C17.0333 35 14.1332 34.1203 11.6665 32.472C9.19972 30.8238 7.27713 28.4811 6.14181 25.7403C5.0065 22.9994 4.70945 19.9834 5.28823 17.0736C5.86701 14.1639 7.29562 11.4912 9.39341 9.3934C11.4912 7.29561 14.1639 5.867 17.0737 5.28822C19.9834 4.70944 22.9994 5.00649 25.7403 6.14181C28.4811 7.27712 30.8238 9.19971 32.472 11.6664C34.1203 14.1332 35 17.0333 35 20C35 23.9782 33.4197 27.7936 30.6066 30.6066C27.7936 33.4196 23.9783 35 20 35Z" fill="#14B8A6" />
+                        </svg>
+
+                        <span className={plan.featured ? "text-gray-600" : "text-gray-600"}>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </FadeInOnScroll>
+            ))}
+          </div>
+        </section>
+      </div>
 
       {/* FAQ Section — dark */}
-      <section className="bg-[#22242A] py-24 px-4">
-        <FadeInOnScroll>
-          <div className="max-w-5xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-12">
-              {/* Left: demo chat */}
-              <div className="md:w-1/2">
-                <div className="bg-[#17181C] rounded-3xl p-6 shadow-xl">
-                  <div className="flex items-center gap-2 mb-6">
-                    <span className="w-3 h-3 rounded-full bg-red-500" />
-                    <span className="w-3 h-3 rounded-full bg-yellow-400" />
-                    <span className="w-3 h-3 rounded-full bg-green-400" />
-                    <span className="ml-2 text-gray-500 text-xs">FAQs</span>
-                  </div>
-
-                  <div className="mb-4 relative">
-                    <input
-                      type="text"
-                      readOnly
-                      placeholder="Have a question for us?"
-                      className="w-full bg-[#22242A] text-gray-400 text-sm px-4 py-3 rounded-xl pr-10 focus:outline-none placeholder-gray-600"
-                    />
-                    <svg className="w-4 h-4 text-gray-500 absolute right-3 top-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </div>
-
-                  <div className="space-y-3">
-                    {faqs.map((faq, i) => (
-                      <div key={i} className="bg-[#22242A] rounded-2xl p-4">
-                        <p className="text-gray-300 text-sm font-medium mb-2">{faq.q}</p>
-                        <p className="text-gray-500 text-xs leading-relaxed">{faq.a}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: plan summary */}
-              <div className="md:w-1/2 flex flex-col justify-center">
-                <p className="text-teal-400 text-sm font-semibold uppercase tracking-widest mb-4">
-                  Everything you need to know
-                </p>
-                <h2 className="text-3xl md:text-4xl font-black text-white mb-6 leading-tight">
-                  Common questions about our plans
-                </h2>
-                <p className="text-gray-400 text-base mb-8">
-                  Not sure which plan is right for you? Whether you're an early-stage startup or a
-                  growing business ready to scale support, we have a path for you.
-                </p>
-                <div className="space-y-3">
-                  {[
-                    { label: "Waitlist", desc: "Free. Join early, get first access." },
-                    { label: "Founding Companies", desc: "Limited spots. Priority onboarding." },
-                    { label: "Custom", desc: "Talk to us about your specific needs." },
-                  ].map((item) => (
-                    <div key={item.label} className="flex items-center gap-4 bg-white/5 rounded-2xl p-4">
-                      <div className="w-2 h-2 rounded-full bg-teal-400 shrink-0" />
-                      <div>
-                        <p className="text-white text-sm font-semibold">{item.label}</p>
-                        <p className="text-gray-400 text-xs">{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Link href="/founding" className="mt-8 inline-block">
-                  <button className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-4 rounded-2xl text-base font-semibold transition-colors">
-                    Apply as a Founding Company
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </FadeInOnScroll>
-      </section>
-
-      <Footer />
+      <FadeInOnScroll direction="right" delay={100}>
+        <FAQSection />
+      </FadeInOnScroll>
+      <FadeInOnScroll delay={100}>
+        <CTASection />
+      </FadeInOnScroll>
+      <FadeInOnScroll>
+        <Footer />
+      </FadeInOnScroll>
     </main>
   );
 }

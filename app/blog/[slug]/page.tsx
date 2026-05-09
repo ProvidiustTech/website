@@ -58,8 +58,14 @@ export async function generateMetadata({ params }: Props) {
 
 // ─── Static params ────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
-  const posts = await getAllPostsFromBlob();
-  return posts.map((p: any) => ({ slug: p.slug }));
+  try {
+    const posts = await getAllPostsFromBlob();
+    return posts.map((p: any) => ({ slug: p.slug }));
+
+  } catch (e) {
+    console.error("generateStaticParams error:", e);
+    throw e;
+  }
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
