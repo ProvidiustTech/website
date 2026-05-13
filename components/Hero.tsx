@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <section className="bg-[#f5f5f7] pt-12 mt-10 xl:mt-20 pb-0 px-4 text-center relative overflow-hidden">
       {/* Badge */}
-      <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm mb-8">
+      <div className="inline-flex mt-5 xl:mt-2 items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm mb-8">
           <img src="/buildicon.svg" alt="" />
         {/* <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center">
         </div> */}
@@ -12,7 +12,7 @@ export default function Hero() {
       </div>
 
       {/* Headline */}
-      <h1 className="text-4xl md:text-6xl font-black text-[#1E293B] leading-tight mb-4 max-w-4xl mx-auto">
+      <h1 className="text-4xl mt-0 md:text-6xl xl:mt-10 font-black text-[#1E293B] leading-tight mb-4 max-w-4xl mx-auto">
         No More Basic Ai Chatbots
         <br />
         Get{" "}
@@ -29,8 +29,8 @@ export default function Hero() {
       {/* CTAs */}
       <div className="flex flex-col md:flex-row gap-4 justify-center mb-16">
        <Link href="/founding">
-        <button className="bg-gradient-to-r px-32 cursor-pointer from-blue-500 to-teal-400 text-white lg:px-8 py-4 rounded-2xl text-lg font-medium hover:opacity-90 transition-opacity">
-          Join the waitlist
+        <button className="bg-gradient-to-r px-4 cursor-pointer from-blue-500 to-teal-400 text-white lg:px-8 py-4 rounded-2xl text-lg font-medium hover:opacity-90 transition-opacity">
+          Join our Founding companies program
         </button>
         </Link>
         <Link href='/founding/seedemo'>

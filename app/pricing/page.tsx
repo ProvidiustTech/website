@@ -8,7 +8,7 @@ import FAQSection from "@/components/FAQSection";
 
 export const metadata: Metadata = {
   title: "Plans & Access | ProvidiusTech",
-  description: "Flexible plans for every stage of customer support. Join the waitlist, apply as a founding company, or talk to us for a custom solution.",
+  description: "Flexible plans for every stage of customer support. Join our Founding companies program, apply as a founding company, or talk to us for a custom solution.",
 };
 
 const plans = [

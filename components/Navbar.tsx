@@ -46,7 +46,7 @@ export default function Navbar() {
             <div className="flex items-center gap-2 cursor-pointer">
               <img
                 src="/logo.png"
-                className="w-56 absolute mt-4 xl:left-28 left-[1%]"
+                className="w-56 absolute mt-1 xl:left-28 left-[1%]"
                 alt=""
               />
             </div>
