@@ -12,9 +12,15 @@ const channels = [
     name: "Gmail",
     color: "bg-red-500",
     icon: (
-      <svg viewBox="0 0 24 24" fill="white" className="w-5 h-5">
-        <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
-      </svg>
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M36.75 0H11.25C5.0368 0 0 5.0368 0 11.25V36.75C0 42.9632 5.0368 48 11.25 48H36.75C42.9632 48 48 42.9632 48 36.75V11.25C48 5.0368 42.9632 0 36.75 0Z" fill="#F4F2ED"/>
+<path d="M7.80675 38.07H13.7726V23.5813L5.25 17.1895V35.5133C5.25 36.928 6.39638 38.07 7.80675 38.07Z" fill="#4285F4"/>
+<path d="M34.2266 38.0702H40.1926C41.6073 38.0702 42.7494 36.9238 42.7494 35.5135V17.1895L34.2266 23.5815" fill="#34A853"/>
+<path d="M34.2266 12.5017V23.5813L42.7494 17.1894V13.7799C42.7494 10.6181 39.14 8.81546 36.6131 10.7118" fill="#FBBC04"/>
+<path d="M13.7734 23.5807V12.5014L24.0006 20.1714L34.2278 12.501V23.5805L24.0006 31.2512" fill="#EA4335"/>
+<path d="M5.25 13.7799V17.189L13.7726 23.5811V12.5017L11.3863 10.7118C8.85506 8.81546 5.25 10.6181 5.25 13.7799Z" fill="#C5221F"/>
+</svg>
+
     ),
   },
   {
@@ -50,38 +56,38 @@ export default function Channels() {
   return (
     <section className="py-20 bg-gray-950 text-white">
       <div className="max-w-8xl mx-auto w-[92%] px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl sm:text-4xl font-extrabold mb-4">Channels we support</h2>
-        <p className="text-gray-400 max-w-2xl mx-auto text-lg mb-12">
+        <h2 className="text-3xl sm:text-5xl font-extrabold mb-4">Channels we support</h2>
+        <p className="text-gray-400 max-w-2xl mb-14 mx-auto text-lg sm:text-xl">
           Connect with your customers across the platforms they already use, while managing every
           conversation through one intelligent customer care system.
         </p>
 
         {/* Row 1: 3 channels */}
-        <div className="flex flex-wrap justify-center gap-4 mb-4">
+        <div className="flex flex-wrap xl:mr-96 xl:left-0 relative right-4 justify-center gap-2 xl:gap-4">
           {channels.slice(0, 3).map((ch) => (
             <button
               key={ch.name}
-              className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-full px-6 py-3 transition-colors min-w-36"
+              className="flex items-center gap-3 bg-[#D0D4B829] hover:bg-[#d0d4b83f] border border-gray-700 rounded-full xl:px-24 px-3 py-1 xl:py-3 transition-colors xl:min-w-48 min-w-24"
             >
-              <span className={`w-8 h-8 rounded-full ${ch.color} flex items-center justify-center flex-shrink-0`}>
+              <span className={`xl:w-10 xl:h-10 w-6 h-6 rounded-full ${ch.color} flex items-center justify-center flex-shrink-0`}>
                 {ch.icon}
               </span>
-              <span className="font-medium text-sm">{ch.name}</span>
+              <span className="font-medium text-sm xl:text-base">{ch.name}</span>
             </button>
           ))}
         </div>
 
         {/* Row 2: 2 channels — centered */}
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap xl:ml-[40%] xl:left-0 relative top-5 left-16 justify-center gap-2 xl:gap-4">
           {channels.slice(3).map((ch) => (
             <button
               key={ch.name}
-              className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-full px-6 py-3 transition-colors min-w-36"
+              className="flex items-center gap-3 bg-[#D0D4B829] hover:bg-[#d0d4b83f] border border-gray-700 rounded-full xl:px-24 px-3 py-1 xl:py-3 transition-colors min-w-24 xl:min-w-48"
             >
-              <span className={`w-8 h-8 rounded-full ${ch.color} flex items-center justify-center flex-shrink-0`}>
+              <span className={`xl:w-10 xl:h-10 w-6 h-6 rounded-full ${ch.color} flex items-center justify-center flex-shrink-0`}>
                 {ch.icon}
               </span>
-              <span className="font-medium text-sm">{ch.name}</span>
+              <span className="font-medium text-sm xl:text-base">{ch.name}</span>
             </button>
           ))}
         </div>

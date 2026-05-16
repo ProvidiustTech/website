@@ -30,8 +30,8 @@ export default function CoreOfferings() {
       <div className="max-w-8xl mx-auto w-[92%] px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Our Core Offerings</h2>
-          <p className="text-gray-500 max-w-2xl mx-auto text-lg">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-4">Our Core Offerings</h2>
+          <p className="text-gray-500 max-w-5xl mx-auto text-xl">
             From collecting messages across channels to responding with AI and escalating when needed,
             everything works together in one system.
           </p>
