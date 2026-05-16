@@ -41,6 +41,8 @@ export default function Home() {
       <FadeInOnScroll>
         <Footer />
       </FadeInOnScroll>
+
+      <script src="/widget.js"></script>
     </main>
   );
 }

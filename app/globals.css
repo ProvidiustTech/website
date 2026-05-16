@@ -25,6 +25,12 @@
   font-display: swap;
 }
 
+
+.blog-content h1 { @apply text-5xl font-bold text-[#1A1F2E] mt-8 mb-4; }
+.blog-content h2 { @apply text-4xl font-bold text-[#1A1F2E] mt-8 mb-4; }
+.blog-content h3 { @apply text-2xl font-bold text-[#1A1F2E] mt-6 mb-3; }
+.blog-content h4 { @apply text-xl font-semibold text-[#1A1F2E] mt-4 mb-2; }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

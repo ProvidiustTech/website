@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { getAllPosts, getFeaturedPost } from "@/lib/blog";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Blog | ProvidIusTech",
   description: "Read our Topics on AI, AGI, and Agentic Systems",

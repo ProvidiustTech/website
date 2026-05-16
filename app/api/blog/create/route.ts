@@ -1,8 +1,9 @@
 // app/api/blog/create/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 async function uploadToStorage(file: File, path: string): Promise<string> {
+  const supabaseAdmin = getSupabaseAdmin();
   const { error } = await supabaseAdmin.storage
     .from("blog-media")
     .upload(path, file, { upsert: true });
@@ -15,6 +16,7 @@ async function uploadToStorage(file: File, path: string): Promise<string> {
 
 export async function POST(req: NextRequest) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const fd = await req.formData();
 
     const title = fd.get("title") as string;
@@ -46,7 +48,7 @@ export async function POST(req: NextRequest) {
       images.push(url);
     }
 
-    const { error } = await supabaseAdmin.from("posts").insert({
+    const { error } = await (supabaseAdmin.from("posts") as any).insert({
       slug,
       title,
       excerpt:      fd.get("excerpt") as string,

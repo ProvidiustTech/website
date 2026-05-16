@@ -1,10 +1,13 @@
 // app/blog/[slug]/page.tsx
 import Link from "next/link";
-import { getAllPosts, getPostBySlug, formatDate } from "@/lib/blog";
+import { getAllPosts, getPostBySlug } from "@/lib/blog";
+import { formatDate } from "@/lib/blog-types";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FadeInOnScroll from "@/components/FadeInOnScroll";
 import ImageWithFallback from "@/components/ImageWithFallback";
+
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -64,13 +67,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     .filter((p) => p.slug !== post.slug && p.tags.some((t) => post.tags.includes(t)))
     .slice(0, 3);
 
+
+
   return (
     <div className="bg-[#F6F6F6] max-h-screen">
       <Navbar />
 
-      <main className="pt-24 pb-20">
+      <main className="pt-20 bg-[#F6F6F6] pb-20">
         {/* Hero Section with Cover */}
-        <section className="relative w-full overflow-hidden bg-white">
+        <section className="relative w-full overflow-hidden">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
               {/* Text Content */}
@@ -117,21 +122,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             {/* Article Content */}
             <article className="lg:col-span-3">
               <div
-                className="prose prose-sm sm:prose md:prose-lg max-w-none
-                  prose-headings:text-[#1A1F2E] prose-headings:font-bold prose-headings:mt-8 prose-headings:mb-4
-                  prose-h2:text-2xl sm:prose-h2:text-3xl
-                  prose-h3:text-xl sm:prose-h3:text-2xl
-                  prose-p:text-[#6B7280] prose-p:leading-relaxed prose-p:mb-4
-                  prose-ul:text-[#6B7280] prose-li:mb-2
-                  prose-a:text-[#1BAA87] prose-a:no-underline hover:prose-a:underline
-                  prose-strong:text-[#1A1F2E] prose-strong:font-semibold
-                  prose-em:text-[#6B7280] prose-em:italic"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
-
+  className="blog-content bg-[#F6F6F6] prose max-w-none xl:ml-[-21%]
+    prose-headings:text-[#1A1F2E] prose-headings:font-bold prose-headings:mt-8 prose-headings:mb-4
+    prose-h1:text-5xl
+    prose-h2:text-4xl
+    prose-h3:text-2xl
+    prose-h4:text-xl
+    prose-p:text-[#6B7280] prose-p:leading-relaxed prose-p:mb-4
+    prose-ul:text-[#6B7280] prose-li:mb-2
+    prose-a:text-[#1BAA87] prose-a:no-underline hover:prose-a:underline
+    prose-strong:text-[#1A1F2E] prose-strong:font-semibold
+    prose-em:text-[#6B7280] prose-em:italic"
+  dangerouslySetInnerHTML={{ __html: post.content }}
+/>
               {/* Additional Images Gallery */}
               {post.images && post.images.length > 0 && (
-                <section className="mt-16 pt-16 border-t border-gray-200">
+                <section className="mt-16 pt-16 border-t bg-[#F6F6F6] border-gray-200">
                   <h2 className="text-2xl sm:text-3xl font-bold text-[#1A1F2E] mb-8">Key Visuals</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {post.images.map((img, idx) => (

@@ -116,7 +116,7 @@ export default function AdminBlogPage() {
     imageFiles.forEach((f, i) => fd.append(`image-${i}`, f));
 
     try {
-      const res = await fetch("/api/blog/create", { method: "POST", body: fd });
+      const res = await fetch("/api/blog/create", { method: "POST", body: fd, credentials: "include" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to publish");
 

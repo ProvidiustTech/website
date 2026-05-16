@@ -1,7 +1,7 @@
 'use client';
 // components/blog/BlogCard.tsx
 import Link from "next/link";
-import { BlogPost, formatDate } from "@/lib/blog";
+import { BlogPost, formatDate } from "@/lib/blog-types";
 
 interface Props {
   post: BlogPost;

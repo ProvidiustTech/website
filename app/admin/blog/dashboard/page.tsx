@@ -43,14 +43,20 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res  = await fetch("/api/blog");
-        const data = await res.json();
-        const arr  = Array.isArray(data) ? data : (data.posts ?? []);
+        const res = await fetch("/api/blog", { credentials: "include" });
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
+
+        if (!res.ok) {
+          throw new Error(data?.error ?? `Failed to load posts (${res.status})`);
+        }
+
+        const arr = Array.isArray(data) ? data : (data?.posts ?? []);
         setPosts(arr);
         setFilteredPosts(arr);
       } catch (err) {
         console.error("Failed to fetch posts:", err);
-        setMessage({ type: "error", text: "Failed to load posts" });
+        setMessage({ type: "error", text: err instanceof Error ? err.message : "Failed to load posts" });
       } finally {
         setLoading(false);
       }
@@ -114,13 +120,16 @@ export default function AdminDashboard() {
   // ── Handlers ──────────────────────────────────────────────────────────────────
   const handleDelete = async (slug: string) => {
     try {
-      const res = await fetch(`/api/blog/${slug}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Failed to delete");
+      const res = await fetch(`/api/blog/${slug}`, { method: "DELETE", credentials: "include" });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+      if (!res.ok) throw new Error(data?.error ?? "Failed to delete");
       setPosts((prev) => prev.filter((p) => p.slug !== slug));
       setMessage({ type: "success", text: "Post deleted successfully" });
       setDeleteConfirm(null);
-    } catch {
-      setMessage({ type: "error", text: "Failed to delete post" });
+    } catch (err) {
+      console.error("Delete failed:", err);
+      setMessage({ type: "error", text: err instanceof Error ? err.message : "Failed to delete post" });
     }
   };
 

@@ -1,11 +1,11 @@
 "use client";
-// app/admin/blog/edit/[id]/page.tsx — Edit existing blog post
+// app/admin/blog/edit/[slug]/page.tsx — Edit existing blog post
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
-import { BlogPost } from "@/lib/blog";
+import { BlogPost } from "@/lib/blog-types";
 
 const ALL_TAGS = ["E-commerce", "Enterprise AI", "Sales", "Automation", "Customer Support"] as const;
 type Tag = (typeof ALL_TAGS)[number];
@@ -51,9 +51,12 @@ export default function EditBlogPage() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await fetch(`/api/blog/${slug}`);
-        if (!res.ok) throw new Error("Failed to load post");
-        const data = await res.json();
+        console.log(`[EditPage] Fetching post for slug: ${slug}`);
+        const res = await fetch(`/api/blog/${slug}`, { credentials: "include" });
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
+        if (!res.ok) throw new Error(data?.error ?? "Failed to load post");
+        console.log(`[EditPage] Post data loaded:`, data);
         setPost(data);
         setTitle(data.title);
         setExcerpt(data.excerpt);
@@ -65,6 +68,7 @@ export default function EditBlogPage() {
         setCoverPreview(data.coverImage);
         setImagePreviews(data.images || []);
       } catch (err) {
+        console.error(`[EditPage] Fetch post error:`, err);
         setMessage("Failed to load post");
         setStatus("error");
       } finally {
@@ -117,15 +121,26 @@ export default function EditBlogPage() {
     if (coverFile) fd.append("cover", coverFile);
     imageFiles.forEach((f, i) => fd.append(`image-${i}`, f));
 
+    console.log(`[EditPage] Submitting update for slug: ${slug}`);
+    console.log(`[EditPage] FormData keys:`, Array.from(fd.keys()));
+    console.log(`[EditPage] Cover file:`, coverFile ? `${coverFile.name} (${coverFile.size} bytes)` : 'none');
+    console.log(`[EditPage] Image files:`, imageFiles.map(f => `${f.name} (${f.size} bytes)`));
+
     try {
-      const res = await fetch(`/api/blog/${slug}`, { method: "PUT", body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Error");
+      const res = await fetch(`/api/blog/${slug}`, { method: "PUT", body: fd, credentials: "include" });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
+      
+      console.log(`[EditPage] Response status: ${res.status}`);
+      console.log(`[EditPage] Response data:`, data);
+
+      if (!res.ok) throw new Error(data?.error ?? "Error");
       
       setStatus("success");
       setMessage("Post updated successfully!");
       setTimeout(() => router.push("/admin/blog/dashboard"), 2000);
     } catch (err) {
+      console.error(`[EditPage] Submit error:`, err);
       setStatus("error");
       setMessage(err instanceof Error ? err.message : "Something went wrong.");
     }
